@@ -1,0 +1,15 @@
+StarSystem:
+  date_visted: 2022-04-23
+  from_system: originStarSystem
+  linked_StartSystem:
+    toStarSystem01
+    toStarSystem02
+  planets:
+    planet1:
+      planetName
+    race:
+      raceName
+      jane.doe@domain.com
+  story:
+    storyContent:
+      Dear XYZ,
