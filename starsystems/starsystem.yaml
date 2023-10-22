@@ -1,15 +1,9 @@
-StarSystem:
-  date_visted: 2022-04-23
-  from_system: originStarSystem
-  linked_StartSystem:
-    toStarSystem01
-    toStarSystem02
-  planets:
-    planet1:
-      planetName
-    race:
-      raceName
-      jane.doe@domain.com
-  story:
-    storyContent:
-      Dear XYZ,
+StarSystemName: origin1
+alien: klingons
+planets:
+- planet1
+- planet2
+linked_systems:
+- system2
+- system3
+intro_text: Welcome to origin1 system.

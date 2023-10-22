@@ -1,0 +1,2 @@
+
+STAR_DIRECTORY = "starsystems"
