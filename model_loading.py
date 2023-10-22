@@ -17,7 +17,7 @@ def prompt_model():
 def load_starsystem_yaml() -> dict:
 
 
-    with open("starsystems/starsystem.yaml", mode="rt", encoding="utf-8") as file:
+    with open("starsystems/origin1.yaml", mode="rt", encoding="utf-8") as file:
         # print("\n")
         # print(yaml.safe_load(file))
         all_starsystems = yaml.safe_load(file)

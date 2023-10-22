@@ -1,0 +1,9 @@
+StarSystemName: DefaultSystemName
+alien: DefaultAlienName
+intro_text: Welcome to the DefaultSystemName system!
+linked_systems:
+- Linked System 1
+planets:
+- Earth
+- Mars
+- Pluto
