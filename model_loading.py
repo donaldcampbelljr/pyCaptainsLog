@@ -1,6 +1,9 @@
 import yaml
+import os
 from datetime import datetime
 from rich import print
+from constants import STAR_DIRECTORY
+from starsystem import StarSystem
 
 def load_model():
 
@@ -13,21 +16,3 @@ def prompt_model():
     model_output = "No output yet."
 
     return model_output
-
-def load_starsystem_yaml() -> dict:
-
-
-    with open("starsystems/origin1.yaml", mode="rt", encoding="utf-8") as file:
-        # print("\n")
-        # print(yaml.safe_load(file))
-        all_starsystems = yaml.safe_load(file)
-        for k,v in all_starsystems.items():
-            print("\n")
-            print(k)
-            print(v)
-        print(type(all_starsystems))
-        print(datetime.now())
-
-    
-
-    return all_starsystems

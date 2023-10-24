@@ -1,7 +1,6 @@
 import yaml
 from datetime import datetime
 from rich import print
-from model_loading import load_starsystem_yaml
 from starsystem import save_star_system, jump_to_starsystem
 from starsystem import StarSystem
 
@@ -12,7 +11,7 @@ def main():
 
     # Do a loading screen, basically ask the user if they are ready to load the galaxy?
 
-    star_systems = load_starsystem_yaml()
+    #star_systems = load_starsystem_yaml()
 
     new_system = StarSystem()
 
@@ -26,9 +25,9 @@ def main():
     print("Where would you like to jump?\n\n")
     count = 0
     for i in current_system.linked_systems:
-        count + 1
-        print("Some Linked Systems:\n")
-        print(i + "\n")
+        count += 1
+        print(f"Some Linked Systems:\n")
+        print(f"{count}  {i}  ")
     
     next_system = None
     while type(next_system) is not int:
@@ -40,8 +39,13 @@ def main():
         if type(next_system) is not int or next_system > len(current_system.linked_systems) or next_system < 1:
             print("Invalid Jump Coordinates!!!!!")
 
+    next_system = current_system.linked_systems[count - 1]
+    print(next_system)
+
+    print("here")
     jump_to_starsystem(current_system, next_system)
 
+    print("Successfully jumped!")
     return 0
 
 if __name__ == "__main__":

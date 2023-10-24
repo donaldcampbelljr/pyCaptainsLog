@@ -1,30 +1,33 @@
-import model_loading
 import yaml
 import os
 from constants import STAR_DIRECTORY
 
-class StarSystem:
+class StarSystem():
     """
     The main class that intializes star systems and is populated with attributes (planets, etc).
     """
 
-    def __init__(self) -> None:
+    def __init__(self, name, planets, alien, linked_systems, intro_text) -> None:
 
         # Load Model, feed it inputs and then generate items.
 
+        self.name = name
+        self.planets = planets
+        self.alien = alien
+        self.linked_systems = linked_systems
+        self.intro_text = intro_text
 
-        self.name = "DefaultSystemName"
-        # Mars, Pluto, Alpha Centauri, Etc.
-        self.planets = ["Earth", "Mars", "Pluto"]
+        # self.name = "DefaultSystemName"
+        # # Mars, Pluto, Alpha Centauri, Etc.
+        # self.planets = ["Earth", "Mars", "Pluto"]
+        #
+        # # Klingons, Killer Robots, etc.
+        # self.alien = "DefaultAlienName"
+        #
+        # self.linked_systems = ["origin1"]
+        #
+        # self.intro_text = f"Welcome to the {self.name} system!"
 
-        # Klingons, Killer Robots, etc.
-        self.alien = "DefaultAlienName"
-
-        self.linked_systems = ["Linked System 1"]
-
-        self.intro_text = f"Welcome to the {self.name} system!"
-
-        pass
 
     def __str__(self):
         return f"Starsystem {self.name}"
@@ -65,6 +68,12 @@ def save_star_system(starsystem):
 
     return 0
 
+def create_starsystem():
+
+    starsystem = StarSystem()
+
+    return starsystem
+
 def jump_to_starsystem(current_system, next_system):
 
     ## Check if ship location is already at system
@@ -76,10 +85,37 @@ def jump_to_starsystem(current_system, next_system):
     # read files from
     from os import walk
     path_starsystems =  os.path.abspath(STAR_DIRECTORY)
-    f = []
+    filenames = []
     for (dirpath, dirnames, filenames) in walk(path_starsystems):
         print(filenames)
 
+    if current_system.name == next_system:
+        print("You are already in this system.")
 
+    if next_system in filenames:
+        load_starsystem_yaml(next_system)
+    else:
+        # Now we should create a new star system:
+        create_starsystem()
     return 0
 
+
+def load_starsystem_yaml(starsystemname) -> dict:
+
+
+    path_starsystems =  os.path.abspath(STAR_DIRECTORY)
+    # This is incorrect syntax for appending filename to path as a file in the directory: os.path.join(path_starsystems + file_name)
+    file_name = starsystemname + ".yaml"
+
+    file_path = os.path.join(path_starsystems , file_name)
+    with open(file_path, mode="rt", encoding="utf-8") as file:
+        # print("\n")
+        # print(yaml.safe_load(file))
+        starsystem_loaded = yaml.safe_load(file)
+        for k,v in starsystem_loaded.items():
+            print("\n")
+            print(k)
+            print(v)
+
+
+    return starsystem_loaded
