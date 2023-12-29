@@ -1,0 +1,8 @@
+StarSystemName: Sol
+alien: Humans
+intro_text: Welcome to the Sol system!
+linked_systems:
+- alpha_centauri
+planets:
+- Earth
+- Mars

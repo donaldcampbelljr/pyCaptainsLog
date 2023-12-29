@@ -1,0 +1,7 @@
+StarSystemName: Ross_248
+alien: Ross_248_aliens
+intro_text: Welcome to the Ross_248 system!
+linked_systems:
+- alpha_centauri
+planets:
+- Ross 248 Planet A

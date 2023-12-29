@@ -1,0 +1,10 @@
+StarSystemName: Alpha_Centauri
+alien: Alpha_Centauri_aliens
+intro_text: Welcome to the Alpha_Centauri system!
+linked_systems:
+- sol
+- ross_248
+planets:
+- Proxima Centauri a
+- Proxima Centauri b
+- Proxima Centauri c

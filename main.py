@@ -13,7 +13,7 @@ def main():
 
     #star_systems = load_starsystem_yaml()
 
-    new_system = StarSystem()
+    new_system = StarSystem(name="a", planets=["Earth", "Mars", "Pluto"], alien = "aliens", linked_systems = ["origin1"], intro_text = f"Welcome to the system!")
 
     print(new_system.name)
     
