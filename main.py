@@ -1,7 +1,7 @@
 import yaml
 from datetime import datetime
 from rich import print
-from starsystem import save_star_system, jump_to_starsystem
+from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yaml
 from starsystem import StarSystem
 
 
@@ -13,14 +13,14 @@ def main():
 
     #star_systems = load_starsystem_yaml()
 
-    new_system = StarSystem(name="a", planets=["Earth", "Mars", "Pluto"], alien = "aliens", linked_systems = ["origin1"], intro_text = f"Welcome to the system!")
+    #new_system = StarSystem(name="a", planets=["Earth", "Mars", "Pluto"], alien = "aliens", linked_systems = ["origin1"], intro_text = f"Welcome to the system!")
 
-    print(new_system.name)
-    
-    save_star_system(new_system)
+    starting_location = load_starsystem_yaml("sol")
+
+    print(starting_location.name)
 
     # Jump to new or old star system:
-    current_system =  new_system
+    current_system =  starting_location
 
     print("Where would you like to jump?\n\n")
     count = 0
@@ -28,6 +28,9 @@ def main():
         count += 1
         print(f"Some Linked Systems:\n")
         print(f"{count}  {i}  ")
+
+    count +=1
+    print(f"{count}  {'Unexplored'}  ")
     
     next_system = None
     while type(next_system) is not int:
@@ -36,13 +39,15 @@ def main():
             next_system = int(next_system)
         except:
             pass
-        if type(next_system) is not int or next_system > len(current_system.linked_systems) or next_system < 1:
+        if type(next_system) is not int or next_system > len(current_system.linked_systems+1) or next_system < 1:
             print("Invalid Jump Coordinates!!!!!")
 
-    next_system = current_system.linked_systems[count - 1]
+    if next_system == count:
+        next_system = "unexplored"
+    else:
+        next_system = current_system.linked_systems[count - 1]
     print(next_system)
 
-    print("here")
     jump_to_starsystem(current_system, next_system)
 
     print("Successfully jumped!")

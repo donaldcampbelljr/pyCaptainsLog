@@ -1,6 +1,8 @@
 import yaml
 import os
+from os import walk
 from constants import STAR_DIRECTORY
+from random_generators import generate_system_name, generate_alien_name, generate_planets_list, get_intro_text
 
 class StarSystem():
     """
@@ -68,9 +70,29 @@ def save_star_system(starsystem):
 
     return 0
 
-def create_starsystem():
+def load_random_values():
+    """
+    Just loads random values from already generated text files
+    """
 
-    starsystem = StarSystem()
+    system_name = generate_system_name()
+    planets = generate_planets_list()
+    alien = generate_alien_name()
+
+    return system_name, planets, alien
+
+def create_random_starsystem(source_system):
+    # self.name = name
+    # self.planets = planets
+    # self.alien = alien
+    # self.linked_systems = linked_systems
+    # self.intro_text = intro_text
+
+    values = load_random_values()
+
+    linked_systems = [source_system.name]
+
+    starsystem = StarSystem(name=values[0], planets=values[1], alien=values[2], linked_systems=linked_systems, intro_text=get_intro_text())
 
     return starsystem
 
@@ -79,28 +101,30 @@ def jump_to_starsystem(current_system, next_system):
     ## Check if ship location is already at system
     # check if starsystem already exists (the yaml)
     # create new star system as last option.
+
     print(f"Current System: {current_system}\n")
     print(f"Next System: {next_system}\n")
 
-    # read files from
-    from os import walk
-    path_starsystems =  os.path.abspath(STAR_DIRECTORY)
-    filenames = []
-    for (dirpath, dirnames, filenames) in walk(path_starsystems):
-        print(filenames)
-
-    if current_system.name == next_system:
-        print("You are already in this system.")
-
-    if next_system in filenames:
-        load_starsystem_yaml(next_system)
-    else:
+    if next_system == "unexplored":
         # Now we should create a new star system:
-        create_starsystem()
+        create_random_starsystem(source_system = current_system.name)
+    else:
+        path_starsystems = os.path.abspath(STAR_DIRECTORY)
+        filenames = []
+        for (dirpath, dirnames, filenames) in walk(path_starsystems):
+            print(filenames)
+
+        if current_system.name == next_system:
+            print("You are already in this system.")
+
+        if next_system in filenames:
+            load_starsystem_yaml(next_system)
+        else:
+            print("SYSTEM NOT FOUND")
     return 0
 
 
-def load_starsystem_yaml(starsystemname) -> dict:
+def load_starsystem_yaml(starsystemname) -> StarSystem:
 
 
     path_starsystems =  os.path.abspath(STAR_DIRECTORY)
@@ -117,5 +141,11 @@ def load_starsystem_yaml(starsystemname) -> dict:
             print(k)
             print(v)
 
+    # Create system from loaded yaml file
+    print(starsystem_loaded)
 
-    return starsystem_loaded
+    starsystem = StarSystem(name=starsystem_loaded["name"], planets=starsystem_loaded["planets"], alien=starsystem_loaded["alien"], linked_systems=starsystem_loaded["linked_systems"],
+                            intro_text=get_intro_text())
+
+
+    return starsystem
