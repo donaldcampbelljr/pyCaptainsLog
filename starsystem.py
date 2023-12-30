@@ -18,17 +18,11 @@ class StarSystem():
         self.alien = alien
         self.linked_systems = linked_systems
         self.intro_text = intro_text
+        name = name.replace(" ", "")
+        name = name.lower()
+        # Make the string lowercase using th
+        self.file_name = name+".yaml"
 
-        # self.name = "DefaultSystemName"
-        # # Mars, Pluto, Alpha Centauri, Etc.
-        # self.planets = ["Earth", "Mars", "Pluto"]
-        #
-        # # Klingons, Killer Robots, etc.
-        # self.alien = "DefaultAlienName"
-        #
-        # self.linked_systems = ["origin1"]
-        #
-        # self.intro_text = f"Welcome to the {self.name} system!"
 
 
     def __str__(self):
@@ -53,14 +47,16 @@ def save_star_system(starsystem):
         starsystem_dict.update({"linked_systems": starsystem.linked_systems})
     if starsystem.intro_text:
         starsystem_dict.update({"intro_text": starsystem.intro_text})
+    if starsystem.file_name:
+        starsystem_dict.update({"file_name": starsystem.file_name})
 
     yaml_obj_to_write = yaml.dump(starsystem_dict)
 
     path_starsystems =  os.path.abspath(STAR_DIRECTORY)
     # This is incorrect syntax for appending filename to path as a file in the directory: os.path.join(path_starsystems + file_name)
-    file_name = starsystem.name + ".yaml"
+    file_name = starsystem.file_name
 
-    file_path = os.path.join(path_starsystems , file_name)
+    file_path = os.path.join(path_starsystems, file_name)
 
     with open(file_path, 'w',) as f :
         f.write(yaml_obj_to_write)
@@ -109,7 +105,7 @@ def jump_to_starsystem(current_system, next_system):
 
     if next_system == "unexplored":
         # Now we should create a new star system:
-        create_random_starsystem(source_system=current_system.name)
+        next_system = create_random_starsystem(source_system=current_system.name)
     else:
         path_starsystems = os.path.abspath(STAR_DIRECTORY)
         filenames = []
@@ -121,18 +117,18 @@ def jump_to_starsystem(current_system, next_system):
 
         filename = next_system+".yaml"
         if filename in filenames:
-            next_system = load_starsystem_yaml(next_system)
+            next_system = load_starsystem_yaml(filename)
         else:
             print("SYSTEM NOT FOUND")
     return next_system
 
 
-def load_starsystem_yaml(starsystemname) -> StarSystem:
+def load_starsystem_yaml(starsystemfilename) -> StarSystem:
 
 
     path_starsystems =  os.path.abspath(STAR_DIRECTORY)
     # This is incorrect syntax for appending filename to path as a file in the directory: os.path.join(path_starsystems + file_name)
-    file_name = starsystemname + ".yaml"
+    file_name = starsystemfilename
 
     file_path = os.path.join(path_starsystems , file_name)
     with open(file_path, mode="rt", encoding="utf-8") as file:

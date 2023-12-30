@@ -16,7 +16,7 @@ def main():
 
     #new_system = StarSystem(name="a", planets=["Earth", "Mars", "Pluto"], alien = "aliens", linked_systems = ["origin1"], intro_text = f"Welcome to the system!")
 
-    starting_location = load_starsystem_yaml("sol")
+    starting_location = load_starsystem_yaml("sol.yaml")
 
     print(starting_location.name)
 
