@@ -90,9 +90,11 @@ def create_random_starsystem(source_system):
 
     values = load_random_values()
 
-    linked_systems = [source_system.name]
+    linked_systems = [source_system]
 
     starsystem = StarSystem(name=values[0], planets=values[1], alien=values[2], linked_systems=linked_systems, intro_text=get_intro_text())
+
+    save_star_system(starsystem)
 
     return starsystem
 
@@ -107,7 +109,7 @@ def jump_to_starsystem(current_system, next_system):
 
     if next_system == "unexplored":
         # Now we should create a new star system:
-        create_random_starsystem(source_system = current_system.name)
+        create_random_starsystem(source_system=current_system.name)
     else:
         path_starsystems = os.path.abspath(STAR_DIRECTORY)
         filenames = []
@@ -117,11 +119,12 @@ def jump_to_starsystem(current_system, next_system):
         if current_system.name == next_system:
             print("You are already in this system.")
 
-        if next_system in filenames:
-            load_starsystem_yaml(next_system)
+        filename = next_system+".yaml"
+        if filename in filenames:
+            next_system = load_starsystem_yaml(next_system)
         else:
             print("SYSTEM NOT FOUND")
-    return 0
+    return next_system
 
 
 def load_starsystem_yaml(starsystemname) -> StarSystem:
@@ -137,15 +140,14 @@ def load_starsystem_yaml(starsystemname) -> StarSystem:
         # print(yaml.safe_load(file))
         starsystem_loaded = yaml.safe_load(file)
         for k,v in starsystem_loaded.items():
-            print("\n")
             print(k)
             print(v)
 
     # Create system from loaded yaml file
     print(starsystem_loaded)
 
-    starsystem = StarSystem(name=starsystem_loaded["name"], planets=starsystem_loaded["planets"], alien=starsystem_loaded["alien"], linked_systems=starsystem_loaded["linked_systems"],
-                            intro_text=get_intro_text())
+    starsystem = StarSystem(name=starsystem_loaded["StarSystemName"], planets=starsystem_loaded["planets"], alien=starsystem_loaded["alien"], linked_systems=starsystem_loaded["linked_systems"],
+                            intro_text=starsystem_loaded["intro_text"])
 
 
     return starsystem

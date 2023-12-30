@@ -6,6 +6,7 @@ from starsystem import StarSystem
 
 
 def main():
+    playing = True
 
     # Initialize Game
 
@@ -20,37 +21,42 @@ def main():
     print(starting_location.name)
 
     # Jump to new or old star system:
-    current_system =  starting_location
+    current_system = starting_location
 
-    print("Where would you like to jump?\n\n")
-    count = 0
-    for i in current_system.linked_systems:
-        count += 1
-        print(f"Some Linked Systems:\n")
-        print(f"{count}  {i}  ")
+    while playing:
+        print("Where would you like to jump?\n\n")
+        count = 0
+        for i in current_system.linked_systems:
+            count += 1
+            print(f"Some Linked Systems:\n")
+            print(f"{count}  {i}  ")
 
-    count +=1
-    print(f"{count}  {'Unexplored'}  ")
-    
-    next_system = None
-    while type(next_system) is not int:
+        count +=1
+        print(f"{count}  {'Unexplored'}  ")
+        print(f"Press 'q' to quit.")
+
+        next_system = None
+
         next_system = input("Enter System: ")
-        try:
-            next_system = int(next_system)
-        except:
-            pass
-        if type(next_system) is not int or next_system > len(current_system.linked_systems+1) or next_system < 1:
-            print("Invalid Jump Coordinates!!!!!")
 
-    if next_system == count:
-        next_system = "unexplored"
-    else:
-        next_system = current_system.linked_systems[count - 1]
-    print(next_system)
+        if next_system == 'q':
+            playing = False
+        else:
+            try:
+                next_system = int(next_system)
+            except:
+                pass
+            if type(next_system) is not int or next_system > len(current_system.linked_systems)+1 or next_system < 1:
+                print("Invalid Jump Coordinates!!!!!")
+            if next_system == count:
+                next_system = "unexplored"
+            else:
+                next_system = current_system.linked_systems[count - 2]
+            print(next_system)
 
-    jump_to_starsystem(current_system, next_system)
-
-    print("Successfully jumped!")
+            next_system = jump_to_starsystem(current_system, next_system)
+            print("Successfully jumped!")
+            current_system = next_system
     return 0
 
 if __name__ == "__main__":
