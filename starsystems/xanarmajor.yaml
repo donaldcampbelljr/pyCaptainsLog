@@ -1,0 +1,15 @@
+StarSystemName: Xanar Major
+alien: Vryrynis
+file_name: xanarmajor.yaml
+intro_text: Alpha Centauri is the closest star system to Earth, located about 4.37
+  light-years away. It is a triple star system, consisting of two Sun-like stars (Alpha
+  Centauri A and Alpha Centauri B) and a red dwarf star (Proxima Centauri). Proxima
+  b is a confirmed exoplanet that orbits within the habitable zone of Proxima Centauri.
+  It is the closest known exoplanet to Earth.
+linked_systems:
+- Ross_248
+planets:
+- Kepia Major
+- Belusos
+- Bel Majoros
+- Nebaia

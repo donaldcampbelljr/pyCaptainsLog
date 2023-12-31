@@ -1,0 +1,15 @@
+StarSystemName: Xanar Minor
+alien: Xylosnaris
+file_name: xanarminor.yaml
+intro_text: Kepler-452b is a confirmed exoplanet that orbits within the habitable
+  zone of its star. It is slightly larger and older than Earth, and it is one of the
+  most Earth-like planets yet discovered. The star system is located about 1400 light-years
+  from Earth.
+linked_systems:
+- Ross_248
+planets:
+- Aetharor
+- Jovus Beta
+- Jovonos
+- Jov Minoria
+- Xanaos

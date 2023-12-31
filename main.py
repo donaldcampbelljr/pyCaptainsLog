@@ -3,6 +3,7 @@ from datetime import datetime
 from rich import print
 from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yaml
 from starsystem import StarSystem
+import os
 
 
 def main():
@@ -24,11 +25,11 @@ def main():
     current_system = starting_location
 
     while playing:
-        print("Where would you like to jump?\n\n")
+        print("Where would you like to jump?\n")
         count = 0
         for i in current_system.linked_systems:
             count += 1
-            print(f"Some Linked Systems:\n")
+            print(f"Some Linked Systems:")
             print(f"{count}  {i}  ")
 
         count +=1
@@ -55,7 +56,6 @@ def main():
             print(next_system)
 
             next_system = jump_to_starsystem(current_system, next_system)
-            print("Successfully jumped!")
             current_system = next_system
     return 0
 

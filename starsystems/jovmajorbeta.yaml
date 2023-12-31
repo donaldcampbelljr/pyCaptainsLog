@@ -1,0 +1,12 @@
+StarSystemName: Jov Major Beta
+alien: Zyronorana
+file_name: jovmajorbeta.yaml
+intro_text: TRAPPIST-1 is a star system located about 39 light-years from Earth. It
+  is the first known star system to have seven Earth-sized planets orbiting within
+  its habitable zone. The planets are all very close to each other, and they are thought
+  to be tidally locked to their star, meaning that the same side of each planet always
+  faces the star.
+linked_systems:
+- Xan Minoris
+planets:
+- Aeth Beta Beta

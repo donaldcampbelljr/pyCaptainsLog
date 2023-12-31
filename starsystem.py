@@ -1,6 +1,7 @@
 import yaml
 import os
 from os import walk
+from os import system, name
 from constants import STAR_DIRECTORY
 from random_generators import generate_system_name, generate_alien_name, generate_planets_list, get_intro_text
 
@@ -94,32 +95,45 @@ def create_random_starsystem(source_system):
 
     return starsystem
 
-def jump_to_starsystem(current_system, next_system):
+def jump_to_starsystem(current_system: StarSystem, next_system_name: str,):
 
     ## Check if ship location is already at system
     # check if starsystem already exists (the yaml)
     # create new star system as last option.
 
     print(f"Current System: {current_system}\n")
-    print(f"Next System: {next_system}\n")
+    print(f"Next System: {next_system_name}\n")
 
-    if next_system == "unexplored":
+    if next_system_name == "unexplored":
         # Now we should create a new star system:
         next_system = create_random_starsystem(source_system=current_system.name)
     else:
-        path_starsystems = os.path.abspath(STAR_DIRECTORY)
-        filenames = []
-        for (dirpath, dirnames, filenames) in walk(path_starsystems):
-            print(filenames)
-
-        if current_system.name == next_system:
+        if current_system.name == next_system_name:
             print("You are already in this system.")
-
-        filename = next_system+".yaml"
-        if filename in filenames:
-            next_system = load_starsystem_yaml(filename)
+            next_system = current_system
+            clear()
+            print("Successful Jump")
         else:
-            print("SYSTEM NOT FOUND")
+            path_starsystems = os.path.abspath(STAR_DIRECTORY)
+            filenames = []
+            for (dirpath, dirnames, filenames) in walk(path_starsystems):
+                print(filenames)
+
+            # Convert user facing name to lower case without spaces to find file name.
+            next_system_name = next_system_name.replace(" ", "")
+            next_system_name = next_system_name.lower()
+
+            filename = next_system_name + ".yaml"
+
+            if filename in filenames:
+                next_system = load_starsystem_yaml(filename)
+                clear()
+                print("Successful Jump")
+            else:
+                print("SYSTEM NOT FOUND")
+                next_system = current_system
+                print("JUMP NOT COMPLETED")
+
     return next_system
 
 
@@ -147,3 +161,14 @@ def load_starsystem_yaml(starsystemfilename) -> StarSystem:
 
 
     return starsystem
+
+
+def clear():
+    print("\n"*20)
+    # # for windows
+    # if name == 'nt':
+    #     _ = system('cls')
+    #
+    # # for mac and linux(here, os.name is 'posix')
+    # else:
+    #     _ = system('clear')
