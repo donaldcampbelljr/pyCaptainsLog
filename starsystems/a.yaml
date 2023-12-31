@@ -1,9 +1,0 @@
-StarSystemName: a
-alien: aliens
-intro_text: Welcome to the system!
-linked_systems:
-- origin1
-planets:
-- Earth
-- Mars
-- Pluto

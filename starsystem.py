@@ -127,6 +127,7 @@ def jump_to_starsystem(current_system: StarSystem, next_system_name: str,):
 
             if filename in filenames:
                 next_system = load_starsystem_yaml(filename)
+                next_system = create_starsystem_from_dict(next_system)
                 clear()
                 print("Successful Jump")
             else:
@@ -155,11 +156,16 @@ def load_starsystem_yaml(starsystemfilename) -> StarSystem:
 
     # Create system from loaded yaml file
     print(starsystem_loaded)
+    #
+    # starsystem = StarSystem(name=starsystem_loaded["StarSystemName"], planets=starsystem_loaded["planets"], alien=starsystem_loaded["alien"], linked_systems=starsystem_loaded["linked_systems"],
+    #                         intro_text=starsystem_loaded["intro_text"])
 
+
+    return starsystem_loaded
+
+def create_starsystem_from_dict(starsystem_loaded):
     starsystem = StarSystem(name=starsystem_loaded["StarSystemName"], planets=starsystem_loaded["planets"], alien=starsystem_loaded["alien"], linked_systems=starsystem_loaded["linked_systems"],
                             intro_text=starsystem_loaded["intro_text"])
-
-
     return starsystem
 
 

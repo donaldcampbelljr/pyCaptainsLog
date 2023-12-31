@@ -1,7 +1,7 @@
 import yaml
 from datetime import datetime
 from rich import print
-from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yaml
+from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yaml, create_starsystem_from_dict
 from starsystem import StarSystem
 import os
 from universe import universe_save
@@ -18,6 +18,7 @@ def main():
     #new_system = StarSystem(name="a", planets=["Earth", "Mars", "Pluto"], alien = "aliens", linked_systems = ["origin1"], intro_text = f"Welcome to the system!")
 
     starting_location = load_starsystem_yaml("sol.yaml")
+    starting_location = create_starsystem_from_dict(starting_location)
 
     print(starting_location.name)
 
