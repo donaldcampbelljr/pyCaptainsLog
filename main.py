@@ -4,7 +4,7 @@ from rich import print
 from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yaml
 from starsystem import StarSystem
 import os
-
+from universe import universe_save
 
 def main():
     playing = True
@@ -35,6 +35,7 @@ def main():
         count +=1
         print(f"{count}  {'Unexplored'}  ")
         print(f"Press 'q' to quit.")
+        print(f"Press 's' to save and quit.")
 
         next_system = None
 
@@ -42,6 +43,11 @@ def main():
 
         if next_system == 'q':
             playing = False
+        elif next_system == 's':
+                playing = False
+                link = universe_save()
+                print(f"Quitting. All files saved. Graph produced here: {link}")
+
         else:
             try:
                 next_system = int(next_system)
