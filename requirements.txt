@@ -1,2 +1,5 @@
 rich
 pyaml
+pandas
+matplotlib
+networkx
