@@ -1,4 +1,3 @@
-Kepler-452b is a confirmed exoplanet that orbits within the habitable zone of its star. It is slightly larger and older than Earth, and it is one of the most Earth-like planets yet discovered. The star system is located about 1400 light-years from Earth.
-TRAPPIST-1 is a star system located about 39 light-years from Earth. It is the first known star system to have seven Earth-sized planets orbiting within its habitable zone. The planets are all very close to each other, and they are thought to be tidally locked to their star, meaning that the same side of each planet always faces the star.
-Alpha Centauri is the closest star system to Earth, located about 4.37 light-years away. It is a triple star system, consisting of two Sun-like stars (Alpha Centauri A and Alpha Centauri B) and a red dwarf star (Proxima Centauri). Proxima b is a confirmed exoplanet that orbits within the habitable zone of Proxima Centauri. It is the closest known exoplanet to Earth.
-Gliese 581 is a star system located about 20 light-years from Earth. It is a single star system, consisting of a red dwarf star. Gliese 581c is a confirmed exoplanet that orbits within the habitable zone of its star. It is one of the first Earth-sized exoplanets to be discovered. However, subsequent studies have suggested that Gliese 581c may be too hot to be habitable.
+This system is scrambling the ship's sensors.
+This system is producing interference.
+This system is unknown.

@@ -1,4 +1,6 @@
 import random
+import os
+import google.generativeai as genai
 
 def generate_system_name():
     first_syllables = ["Exo", "Aeth", "Xan", "Sol", "Terra", "Bel", "Mar", "Jov", "Neb", "Kep"]
@@ -25,16 +27,37 @@ def generate_planets_list():
         list_of_planets.append(system_name)
     return list_of_planets
 
-def get_intro_text():
-    def random_line(filename):
-        """Reads a random line from a text file."""
-        with open(filename, 'r') as file:
-            lines = file.readlines()
-            random_line = random.choice(lines)
-            return random_line.strip()
+def get_intro_text(system_name):
 
-    # Example usage:
-    filename = "demo/infos.txt"
-    intro_line = random_line(filename)
+    # First see if the Google API Key is available, else, generate some random text
+
+    GOOGLE_API_KEY = None
+    try:
+        GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+    except KeyError:
+        print("None")
+
+    if GOOGLE_API_KEY is not None:
+        print("JUMPING INTO THE UNKNOWN....\n")
+        genai.configure(api_key=GOOGLE_API_KEY)
+
+        model = genai.GenerativeModel('gemini-pro')
+
+        response = model.generate_content(f"Write a brief description about the fictional {system_name} star system. Keep it to two lines of text."
+                                          )
+        ##print(to_markdown(response.text))
+        ##print(response.text)
+        intro_line = response.text
+    else:
+        def random_line(filename):
+            """Reads a random line from a text file."""
+            with open(filename, 'r') as file:
+                lines = file.readlines()
+                random_line = random.choice(lines)
+                return random_line.strip()
+
+        # Example usage:
+        filename = "demo/infos.txt"
+        intro_line = random_line(filename)
 
     return intro_line

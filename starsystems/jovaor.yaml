@@ -1,16 +1,12 @@
 StarSystemName: Jovaor
-alien: Vrykarya
+alien: Ythkarvan
 file_name: jovaor.yaml
-intro_text: Alpha Centauri is the closest star system to Earth, located about 4.37
-  light-years away. It is a triple star system, consisting of two Sun-like stars (Alpha
-  Centauri A and Alpha Centauri B) and a red dwarf star (Proxima Centauri). Proxima
-  b is a confirmed exoplanet that orbits within the habitable zone of Proxima Centauri.
-  It is the closest known exoplanet to Earth.
+intro_text: The Jovaor star system is located in the Andromeda galaxy and is home
+  to a diverse array of planets, including the vibrant jungle world of Javor VII and
+  the frozen wasteland of Javor IX.
 linked_systems:
-- Terraaris
+- Exoia Major
 planets:
-- Xan Minoros
-- Exo Minor Major
-- Xan Minoros
-- Terraonor
-- Kep Prime Minor
+- Belonor
+- Aethiaos
+- Joviaor

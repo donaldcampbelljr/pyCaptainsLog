@@ -62,7 +62,7 @@ def save_star_system(starsystem):
     with open(file_path, 'w',) as f :
         f.write(yaml_obj_to_write)
     
-    print("\n Successful Save to File")
+    print("Successful Save to File")
 
 
     return 0
@@ -89,7 +89,7 @@ def create_random_starsystem(source_system):
 
     linked_systems = [source_system]
 
-    starsystem = StarSystem(name=values[0], planets=values[1], alien=values[2], linked_systems=linked_systems, intro_text=get_intro_text())
+    starsystem = StarSystem(name=values[0], planets=values[1], alien=values[2], linked_systems=linked_systems, intro_text=get_intro_text(system_name=values[0]))
 
     save_star_system(starsystem)
 
@@ -102,11 +102,11 @@ def jump_to_starsystem(current_system: StarSystem, next_system_name: str,):
     # create new star system as last option.
 
     print(f"Current System: {current_system}\n")
-    print(f"Next System: {next_system_name}\n")
 
     if next_system_name == "unexplored":
         # Now we should create a new star system:
         next_system = create_random_starsystem(source_system=current_system.name)
+        print(f"Next System: {next_system.name}\n")
     else:
         if current_system.name == next_system_name:
             print("You are already in this system.")
@@ -135,6 +135,7 @@ def jump_to_starsystem(current_system: StarSystem, next_system_name: str,):
                 next_system = current_system
                 print("JUMP NOT COMPLETED")
 
+    print(next_system.intro_text)
     return next_system
 
 
