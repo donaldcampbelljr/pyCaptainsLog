@@ -151,12 +151,12 @@ def load_starsystem_yaml(starsystemfilename) -> StarSystem:
         # print("\n")
         # print(yaml.safe_load(file))
         starsystem_loaded = yaml.safe_load(file)
-        for k,v in starsystem_loaded.items():
-            print(k)
-            print(v)
+        # for k,v in starsystem_loaded.items():
+        #     print(k)
+        #     print(v)
 
     # Create system from loaded yaml file
-    print(starsystem_loaded)
+    #print(starsystem_loaded)
     #
     # starsystem = StarSystem(name=starsystem_loaded["StarSystemName"], planets=starsystem_loaded["planets"], alien=starsystem_loaded["alien"], linked_systems=starsystem_loaded["linked_systems"],
     #                         intro_text=starsystem_loaded["intro_text"])
