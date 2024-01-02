@@ -2,12 +2,19 @@ import yaml
 from datetime import datetime
 from rich import print
 from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yaml, create_starsystem_from_dict
-from starsystem import StarSystem
+from starsystem import StarSystem, clear
 import os
 from universe import universe_save
+from random_generators import roll_die, comparison_dice
+from ship import Ship
+
+
+
 
 def main():
     playing = True
+
+
 
     # Initialize Game
 
@@ -25,7 +32,10 @@ def main():
     # Jump to new or old star system:
     current_system = starting_location
 
+    player_ship = Ship(name="Enterprise", location=current_system)
+
     while playing:
+        player_ship.location = current_system
         print("Where would you like to jump?\n")
         count = 0
         for i in current_system.linked_systems:
@@ -52,6 +62,19 @@ def main():
                 playing = False
                 link = universe_save()
                 print(f"Quitting. All files saved. Graph produced here: {link}")
+        elif verb == 'e':
+            # event logic
+            if noun =='planet':
+                print("placholder for planet event logic")
+            else:
+                # assume system level
+                success = resolve_system_event(current_system, player_ship)
+
+                if success:
+                    print("Encounter successful")
+                else:
+                    print("Encounter not successful")
+                save_star_system(current_system)
         else:
             try:
                 next_system = int(verb) #temp holder for now, just assume if int user wants to jump
@@ -102,6 +125,33 @@ def parse_user_input(input):
         extra = None
 
     return verb, noun, extra
+
+def resolve_system_event(current_system: StarSystem, ship: Ship):
+
+    # right now there is one system_level event
+    clear()
+
+    for k,v in current_system.events['system'].items():
+        print(v)
+        if k == 'event_text':
+            current_system.events['system'][k] = "CHANHE THE EVENT TEXT HERE"
+
+
+    type = current_system.events['system']['type']
+    success_num = current_system.events['system']['success']
+    value = 0
+
+    if type == 'science':
+        value = ship.science
+    if type == 'diplomacy':
+        value = ship.diplomacy
+    if type == 'combat':
+        value = ship.strength
+
+    success = comparison_dice(roll_die(value), success_num)
+
+    # if successful
+    return success
 
 
 if __name__ == "__main__":

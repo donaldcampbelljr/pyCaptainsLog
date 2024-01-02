@@ -153,6 +153,10 @@ def jump_to_starsystem(current_system: StarSystem, next_system_name: str,):
         # Now we should create a new star system:
         next_system = create_random_starsystem(source_system=current_system.name)
         print(f"Next System: {next_system.name}\n")
+
+        # must add the new system to the current system links
+        current_system.linked_systems.append(next_system.name)
+        save_star_system(current_system)
     else:
         if current_system.name == next_system_name:
             print("You are already in this system.")

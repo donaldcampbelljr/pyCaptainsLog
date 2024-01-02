@@ -69,9 +69,10 @@ def roll_die(num_sides):
 
 
 def comparison_dice(a, b):
+    print(f"COMPARING: {a} vs {b}")
     if a > b:
-        return a
+        return True
     if b > a:
-        return b
+        return False
     if a == b:
-        return 0
+        return True
