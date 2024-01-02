@@ -16,11 +16,27 @@ class Ship():
         self.name = "USS Fed Star Ship"
         # Mars, Pluto, Alpha Centauri, Etc.
         self.location = location
-
-        pass
+        self.health = 100
+        self.crew = 50
+        self.strength = 80
+        self.science = 80
+        self.diplomacy = 80
 
     def scan(self) -> None:
         """
         "Scan" the system, read the system info to the player.
         """
-        print(self.location.info)
+        print(f"Attacking with strength: {self.science}")
+
+    def attack(self) -> None:
+        """
+        Perform attack
+        """
+        print(f"Attacking with strength: {self.strength}")
+
+    def negotiate(self) -> None:
+        """
+        Perform attack
+        """
+        print(f"Negotiating with strength: {self.diplomacy}")
+

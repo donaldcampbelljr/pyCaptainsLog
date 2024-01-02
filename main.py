@@ -42,16 +42,19 @@ def main():
 
         next_system = input("Enter System: ")
 
-        if next_system == 'q':
+
+
+        verb, noun, extra = parse_user_input(next_system)
+
+        if verb == 'q':
             playing = False
-        elif next_system == 's':
+        elif verb == 's':
                 playing = False
                 link = universe_save()
                 print(f"Quitting. All files saved. Graph produced here: {link}")
-
         else:
             try:
-                next_system = int(next_system)
+                next_system = int(verb) #temp holder for now, just assume if int user wants to jump
             except:
                 pass
             if type(next_system) is not int or next_system > len(current_system.linked_systems)+1 or next_system < 1:
@@ -65,6 +68,44 @@ def main():
             next_system = jump_to_starsystem(current_system, next_system)
             current_system = next_system
     return 0
+
+def parse_user_input(input):
+    # simple verb noun identifier
+    # e.g. explore planet planet a
+
+    #split_input = input.split()
+    user_input = input.split()
+
+    user_input = map(str.strip, user_input)
+
+    user_input = list(user_input)
+
+    try:
+        verb = user_input[0]
+    except IndexError:
+        verb = None
+
+    try:
+        noun = user_input[1]
+    except IndexError:
+        noun = None
+
+    try:
+        extra = user_input[2:]
+        if len(extra)>1:
+            extra = ''.join(extra) # if the name the user gives is 2 or more words...
+            extra.lower() # lowercase so that all proper names have no spaces and
+        elif len(extra) == 1:
+            extra = extra[0].lower()
+        else:
+            extra = None
+    except IndexError:
+        extra = None
+
+    #user_input = [verb, noun, extra]
+
+    return verb, noun, extra
+
 
 if __name__ == "__main__":
     main()
