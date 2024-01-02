@@ -1,3 +1,5 @@
+import random
+
 import yaml
 import os
 from os import walk
@@ -10,7 +12,7 @@ class StarSystem():
     The main class that intializes star systems and is populated with attributes (planets, etc).
     """
 
-    def __init__(self, name, planets, alien, linked_systems, intro_text) -> None:
+    def __init__(self, name, planets, alien, linked_systems, intro_text, events) -> None:
 
         # Load Model, feed it inputs and then generate items.
 
@@ -23,6 +25,8 @@ class StarSystem():
         name = name.lower()
         # Make the string lowercase using th
         self.file_name = name+".yaml"
+
+        self.events = events
 
 
 
@@ -50,6 +54,8 @@ def save_star_system(starsystem):
         starsystem_dict.update({"intro_text": starsystem.intro_text})
     if starsystem.file_name:
         starsystem_dict.update({"file_name": starsystem.file_name})
+    if starsystem.events:
+        starsystem_dict.update({"events": starsystem.events})
 
     yaml_obj_to_write = yaml.dump(starsystem_dict)
 
@@ -78,6 +84,44 @@ def load_random_values():
 
     return system_name, planets, alien
 
+
+def select_event_type():
+
+    type = random.choice(['science', 'diplomacy','combat'])
+
+    return type
+
+def select_success_number():
+
+    success_number = random.randint(40,80)
+
+    return success_number
+
+def create_events(name, planets, alien):
+    events = {}
+    events['system'] = {}
+
+    # Update system level events
+    type = select_event_type()
+    success_number = select_success_number()
+    event_text = "Placeholder event text"
+    events['system'].update({'type': type, 'success_number': success_number, 'event_text': event_text})
+
+    #update any planet level events:
+
+
+    if len(planets) > 0:
+        events['planets'] = {}
+        for p in planets:
+            type = select_event_type()
+            success_number = select_success_number()
+            event_text = "Placeholder event text"
+            events['planets'].update({p:{}})
+            events['planets'][p].update({'type': type, 'success_number': success_number, 'event_text': event_text})
+
+    return events
+
+
 def create_random_starsystem(source_system):
     # self.name = name
     # self.planets = planets
@@ -87,9 +131,11 @@ def create_random_starsystem(source_system):
 
     values = load_random_values()
 
+    events = create_events(name=values[0], planets=values[1], alien=values[2])
+
     linked_systems = [source_system]
 
-    starsystem = StarSystem(name=values[0], planets=values[1], alien=values[2], linked_systems=linked_systems, intro_text=get_intro_text(system_name=values[0]))
+    starsystem = StarSystem(name=values[0], planets=values[1], alien=values[2], linked_systems=linked_systems, intro_text=get_intro_text(system_name=values[0]), events=events)
 
     save_star_system(starsystem)
 
@@ -148,25 +194,13 @@ def load_starsystem_yaml(starsystemfilename) -> StarSystem:
 
     file_path = os.path.join(path_starsystems , file_name)
     with open(file_path, mode="rt", encoding="utf-8") as file:
-        # print("\n")
-        # print(yaml.safe_load(file))
         starsystem_loaded = yaml.safe_load(file)
-        # for k,v in starsystem_loaded.items():
-        #     print(k)
-        #     print(v)
-
-    # Create system from loaded yaml file
-    #print(starsystem_loaded)
-    #
-    # starsystem = StarSystem(name=starsystem_loaded["StarSystemName"], planets=starsystem_loaded["planets"], alien=starsystem_loaded["alien"], linked_systems=starsystem_loaded["linked_systems"],
-    #                         intro_text=starsystem_loaded["intro_text"])
-
 
     return starsystem_loaded
 
 def create_starsystem_from_dict(starsystem_loaded):
     starsystem = StarSystem(name=starsystem_loaded["StarSystemName"], planets=starsystem_loaded["planets"], alien=starsystem_loaded["alien"], linked_systems=starsystem_loaded["linked_systems"],
-                            intro_text=starsystem_loaded["intro_text"])
+                            intro_text=starsystem_loaded["intro_text"], events=starsystem_loaded["events"])
     return starsystem
 
 

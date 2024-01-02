@@ -6,3 +6,13 @@ linked_systems:
 planets:
 - Earth
 - Mars
+events:
+  system:
+    type: science
+    event_text: "Some science event text"
+    success: 30
+  planet:
+    Earth:
+      type: diplomacy
+      event_text: "Some diplomacy event text"
+      success: 40

@@ -73,7 +73,6 @@ def parse_user_input(input):
     # simple verb noun identifier
     # e.g. explore planet planet a
 
-    #split_input = input.split()
     user_input = input.split()
 
     user_input = map(str.strip, user_input)
@@ -101,8 +100,6 @@ def parse_user_input(input):
             extra = None
     except IndexError:
         extra = None
-
-    #user_input = [verb, noun, extra]
 
     return verb, noun, extra
 

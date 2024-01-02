@@ -2,8 +2,18 @@ StarSystemName: Alpha_Centauri
 alien: Alpha_Centauri_aliens
 intro_text: The Alpha Centauri system is a star system located in the Alpha Centauri constellation, approximately 4.3 light-years away from Earth. It consists of three stars Alpha Centauri A, Alpha Centauri B, and Alpha Centauri C (also known as Proxima Centauri).
 linked_systems:
-- ross_248
+- sol
 planets:
 - Proxima Centauri a
 - Proxima Centauri b
 - Proxima Centauri c
+events:
+  system:
+    type: science
+    event_text: "Some science event text"
+    success: 30
+  planet:
+    Proxima Centauri a:
+      type: diplomacy
+      event_text: "Some diplomacy event text"
+      success: 40
