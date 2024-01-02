@@ -1,6 +1,7 @@
 import random
 import os
 import google.generativeai as genai
+from rich import print
 
 def generate_system_name():
     first_syllables = ["Exo", "Aeth", "Xan", "Sol", "Terra", "Bel", "Mar", "Jov", "Neb", "Kep"]
@@ -22,7 +23,7 @@ def generate_alien_name():
 
 def generate_planets_list():
     list_of_planets = []
-    for i in range(random.randint(0, 5)):
+    for i in range(random.randint(1, 5)):
         system_name = generate_system_name()
         list_of_planets.append(system_name)
     return list_of_planets
@@ -66,8 +67,8 @@ def get_event_text(location, event_type, ship):
     # TODO consolidate with intro_text generation
     # First see if the Google API Key is available, else, generate some random text
 
-    location = "Kepler 5"
-    event_type = "diplomacy"
+    location = location
+    event_type = event_type
 
     GOOGLE_API_KEY = None
     try:

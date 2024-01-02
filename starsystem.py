@@ -6,6 +6,7 @@ from os import walk
 from os import system, name
 from constants import STAR_DIRECTORY
 from random_generators import generate_system_name, generate_alien_name, generate_planets_list, get_intro_text
+from rich import print
 
 class StarSystem():
     """
@@ -68,7 +69,7 @@ def save_star_system(starsystem):
     with open(file_path, 'w',) as f :
         f.write(yaml_obj_to_write)
     
-    print("Successful Save to File")
+    #print("Successful Save to File")
 
 
     return 0
@@ -179,7 +180,7 @@ def jump_to_starsystem(current_system: StarSystem, next_system_name: str,):
                 next_system = load_starsystem_yaml(filename)
                 next_system = create_starsystem_from_dict(next_system)
                 clear()
-                print("Successful Jump")
+                print("[chartreuse3]Successful Jump[/chartreuse3]")
             else:
                 print("SYSTEM NOT FOUND")
                 next_system = current_system

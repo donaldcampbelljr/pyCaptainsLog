@@ -8,12 +8,8 @@ from starsystem import load_starsystem_yaml
 
 
 def universe_save():
-    print("hello")
-    link = "SOME LINK"
-
     list_systems = []
     path_starsystems = os.path.abspath(STAR_DIRECTORY)
-    filenames = walk(path_starsystems)
     for (dirpath, dirnames, filenames) in walk(path_starsystems):
         print("Collecting filenames")
         for file in filenames:

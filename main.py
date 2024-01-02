@@ -27,26 +27,31 @@ def main():
     starting_location = load_starsystem_yaml("sol.yaml")
     starting_location = create_starsystem_from_dict(starting_location)
 
-    print(starting_location.name)
-
     # Jump to new or old star system:
     current_system = starting_location
 
     player_ship = Ship(name="Enterprise", location=current_system)
 
+    # from rich.style import Style
+    # my_style = Style(color="blue", bold=True)
+    clear()
+    print(f"\n[dark_goldenrod]{starting_location.name}[/dark_goldenrod]")
+
+
     while playing:
         player_ship.location = current_system
-        print("Where would you like to jump?\n")
+        print("\nWhere would you like to jump?")
         count = 0
+        print(f"Adjacent Systems:")
         for i in current_system.linked_systems:
             count += 1
-            print(f"Some Linked Systems:")
             print(f"{count}  {i}  ")
 
         count +=1
         print(f"{count}  {'Unexplored'}  ")
-        print(f"Press 'q' to quit.")
-        print(f"Press 's' to save and quit.")
+        print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage event[/yellow]  'q':[red]quit[/red]  's':[green]save[/green]")
+        # print(f"Press 'q' to quit.")
+        # print(f"Press 's' to save and quit.")
 
         next_system = None
 
@@ -71,9 +76,9 @@ def main():
                 success = resolve_system_event(current_system, player_ship)
 
                 if success:
-                    print("Encounter successful")
+                    print("Encounter [green]successful![/green]")
                 else:
-                    print("Encounter not successful")
+                    print("Encounter [red]not successful![/red]")
                 save_star_system(current_system)
         else:
             try:
