@@ -5,7 +5,7 @@ from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yam
 from starsystem import StarSystem, clear
 import os
 from universe import universe_save
-from random_generators import roll_die, comparison_dice
+from random_generators import roll_die, comparison_dice, get_event_text
 from ship import Ship
 
 
@@ -132,13 +132,13 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
     clear()
 
     for k,v in current_system.events['system'].items():
-        print(v)
+        #print(v)
         if k == 'event_text':
-            current_system.events['system'][k] = "CHANHE THE EVENT TEXT HERE"
+            current_system.events['system'][k] = get_event_text(location=current_system.name, event_type=current_system.events['system']['type'], ship=ship)
 
 
     type = current_system.events['system']['type']
-    success_num = current_system.events['system']['success']
+    success_num = current_system.events['system']['success_number']
     value = 0
 
     if type == 'science':
@@ -148,6 +148,7 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
     if type == 'combat':
         value = ship.strength
 
+    print(current_system.events['system']['event_text'])
     success = comparison_dice(roll_die(value), success_num)
 
     # if successful

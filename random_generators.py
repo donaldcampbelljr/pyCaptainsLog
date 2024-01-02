@@ -62,6 +62,39 @@ def get_intro_text(system_name):
 
     return intro_line
 
+def get_event_text(location, event_type, ship):
+    # TODO consolidate with intro_text generation
+    # First see if the Google API Key is available, else, generate some random text
+
+    location = "Kepler 5"
+    event_type = "diplomacy"
+
+    GOOGLE_API_KEY = None
+    try:
+        GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+    except KeyError:
+        print("None")
+
+    if GOOGLE_API_KEY is not None:
+        print("ENGAGING EVENT....\n")
+        genai.configure(api_key=GOOGLE_API_KEY)
+
+        model = genai.GenerativeModel('gemini-pro')
+
+        response = model.generate_content(
+            f"Write a brief intro about this fictional, science fiction encounter where our starship, the {ship.name} "
+            f"engages in a {event_type} encounter at the location: {location}. Keep it to two lines of text."
+            )
+        ##print(to_markdown(response.text))
+        ##print(response.text)
+
+        event_text = response.text
+
+    else:
+        event_text = " Placeholder since no Google API Key was used"
+
+    return event_text
+
 
 def roll_die(num_sides):
     # simply roll the die

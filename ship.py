@@ -13,7 +13,7 @@ class Ship():
         # Load Model, feed it inputs and then generate items.
 
 
-        self.name = "USS Fed Star Ship"
+        self.name = name
         # Mars, Pluto, Alpha Centauri, Etc.
         self.location = location
         self.health = 100

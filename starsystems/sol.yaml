@@ -4,11 +4,13 @@ events:
   planet:
     Earth:
       event_text: Some diplomacy event text
-      success: 40
+      success_number: 40
       type: diplomacy
   system:
-    event_text: CHANHE THE EVENT TEXT HERE
-    success: 30
+    event_text: In the enigmatic depths of space near Kepler 5, the U.S.S. Voyager
+      embarks on a crucial diplomatic mission, seeking understanding and unity amidst
+      the vast expanse of the cosmos.
+    success_number: 30
     type: science
 file_name: sol.yaml
 intro_text: In a distant corner of the galaxy lies the Sol system, home to the star
@@ -17,6 +19,7 @@ intro_text: In a distant corner of the galaxy lies the Sol system, home to the s
 linked_systems:
 - alpha_centauri
 - Xan Majoria
+- Aethiaia
 planets:
 - Earth
 - Mars
