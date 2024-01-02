@@ -61,3 +61,17 @@ def get_intro_text(system_name):
         intro_line = random_line(filename)
 
     return intro_line
+
+
+def roll_die(num_sides):
+    # simply roll the die
+    return random.randint(1, num_sides)
+
+
+def comparison_dice(a, b):
+    if a > b:
+        return a
+    if b > a:
+        return b
+    if a == b:
+        return 0
