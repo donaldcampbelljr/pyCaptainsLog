@@ -1,7 +1,14 @@
 # pyCaptainsLog
 
-# Introduction
+## Introduction
 CLI based text adventure where you explore procedurally generated star systems.
+
+### Screens
+![image](https://github.com/donaldcampbelljr/pyCaptainsLog/assets/125581724/141a3250-a2a5-49af-a98d-fe6a8b95afc4)
+![image](https://github.com/donaldcampbelljr/pyCaptainsLog/assets/125581724/a31eaa60-5c2e-416c-aa95-c7668ce47eb5)
+
+
+
 
 Locations and connections are procedurally generated.
 
