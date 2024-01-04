@@ -153,8 +153,16 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
     if type == 'combat':
         value = ship.strength
 
-    print(current_system.events['system']['event_text'])
+    from rich.console import Console
+    console = Console()
+    console.rule("[bold red]Engagement Text:")
+    console.print(current_system.events['system']['event_text'], justify='center', soft_wrap=True)
+
+    #print(current_system.events['system']['event_text'])
+    console.rule("[bold red]Outcome:")
     success = comparison_dice(roll_die(value), success_num)
+
+    input("Press Enter to Continue: ")
 
     # if successful
     return success
