@@ -205,6 +205,7 @@ def combat_chat_event(initial_input, ship, enemy_health):
             response = get_gemini_reponse(f"Your ship's health is now: {enemy_health} My ship's health is now: {ship.health} " + player_input + " How much damage do you take and do you counter attack? If so how much damage do I take?")
             event_text = response.text
             console.print(f"[green]{event_text}")
+            enemy_health = calculate_damage(ship, enemy_health, response.text)
 
         final_response = response.text or "No response given."
         # response = model.generate_content(
