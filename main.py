@@ -7,8 +7,9 @@ from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yam
 from starsystem import StarSystem, clear
 import os
 from universe import universe_save
-from random_generators import roll_die, comparison_dice, get_event_text,chat_event
+from random_generators import roll_die, comparison_dice, get_event_text,chat_event, combat_chat_event
 from ship import Ship
+from rich.layout import Layout
 
 
 
@@ -72,19 +73,20 @@ def main():
         elif verb == 'e':
             # event logic
             if noun =='planet':
-                print("placholder for planet event logic")
+                print("placeholder for planet event logic")
             else:
                 # assume system level
                 success = resolve_system_event(current_system, player_ship)
 
                 if success:
-                    print("Encounter [green]successful![/green]")
+                    print("Encounter [green]SUCCESSFUL![/green]")
                 else:
-                    print("Encounter [red]not successful![/red]")
+                    print("Encounter [red]NOT SUCCESSFUL![/red]")
                 save_star_system(current_system)
         elif verb == 'status':
             table = build_table(player_ship)
-            clear()
+            #clear()
+            console.clear()
             console.print(table)
 
         else:
@@ -149,14 +151,13 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
     for k,v in current_system.events['system'].items():
         #print(v)
         if k == 'event_text':
-            current_system.events['system'][k] = get_event_text(location=current_system.name, event_type=current_system.events['system']['type'], ship=ship)
+            if 'Placeholder' in current_system.events['system']['event_text']:
+                current_system.events['system'][k] = get_event_text(location=current_system.name, event_type=current_system.events['system']['type'], ship=ship)
 
 
     type = current_system.events['system']['type']
     success_num = current_system.events['system']['success_number']
     value = 0
-
-
 
     from rich.console import Console
     console = Console()
@@ -182,8 +183,9 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
         success = comparison_dice(roll_die(value), success_num)
     if type == 'combat':
         value = ship.strength
-        console.rule("[bold red]Outcome:")
-        success = comparison_dice(roll_die(value), success_num)
+        console.rule("[bold red]RED ALERT Combat Event:")
+        combat_event(ship, type, value, current_system.events['system']['event_text'], current_system.name)
+        success = True
 
     # if successful
     return success
@@ -198,6 +200,19 @@ def science_event(ship, type, value, event_text, system_name):
 
     success = True
 
+    return success
+
+def combat_event(ship, type, value, event_text, system_name):
+
+    health = ship.health
+    enemy_health = 10
+    initial_input = (f"Let us roleplay. I am a Captain of the {ship.name} on a mission of {type} in the System {system_name}."
+                     f"You should pretend you are a hostile Alien in the {system_name}. My ship has {health} health. Your alien ship has {enemy_health} health."
+                     f"Please keep all responses to 1 sentences maximum. You are able to attack with torpedos or phasers. What do you attack with and how much damamge do you do to my ship?")
+
+    combat_chat_event(initial_input, ship, enemy_health)
+
+    success = True
     return success
 
 

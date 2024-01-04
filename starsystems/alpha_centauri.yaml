@@ -7,11 +7,10 @@ events:
       success_number: 40
       type: diplomacy
   system:
-    event_text: In the far reaches of the galaxy, near the enigmatic Alpha Centauri
-      system, the Starship Enterprise embarks on a daring scientific mission, venturing
-      into uncharted territories to unlock the secrets of this cosmic frontier.
+    event_text: This system is inhabited by a hostile alien race. The ship will engage
+      in combat.
     success_number: 30
-    type: science
+    type: combat
 file_name: alpha_centauri.yaml
 intro_text: The Alpha Centauri system is a star system located in the Alpha Centauri
   constellation, approximately 4.3 light-years away from Earth. It consists of three
@@ -19,8 +18,6 @@ intro_text: The Alpha Centauri system is a star system located in the Alpha Cent
   Centauri).
 linked_systems:
 - sol
-- Kep Minoron
-- Neb Beta Beta
 planets:
 - Proxima Centauri a
 - Proxima Centauri b
