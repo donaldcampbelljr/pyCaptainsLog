@@ -48,8 +48,7 @@ def get_intro_text(system_name):
 
         response = model.generate_content(f"Write a brief description about the fictional {system_name} star system. Keep it to two lines of text."
                                           )
-        ##print(to_markdown(response.text))
-        ##print(response.text)
+
         intro_line = response.text
     else:
         def random_line(filename):
@@ -88,8 +87,6 @@ def get_event_text(location, event_type, ship):
             f"Write a brief intro about this fictional, science fiction encounter where our starship, the {ship.name} "
             f"engages in a {event_type} encounter at the location: {location}. Keep it to two lines of text."
             )
-        ##print(to_markdown(response.text))
-        ##print(response.text)
 
         event_text = response.text
 
@@ -137,12 +134,6 @@ def chat_event(initial_input):
             console.print(f"[green]{event_text}")
 
         final_response = response.text or "No response given."
-        # response = model.generate_content(
-        #     f"Write a brief intro about this fictional, science fiction encounter where our starship, the {ship.name} "
-        #     f"engages in a {event_type} encounter at the location: {location}. Keep it to two lines of text."
-        # )
-        ##print(to_markdown(response.text))
-        ##print(response.text)
 
     else:
         final_response = " Placeholder since no Google API Key was used"
@@ -189,7 +180,6 @@ def combat_chat_event(initial_input, ship, enemy_health):
         chat = model.start_chat(history=[])
 
         response = get_gemini_reponse(initial_input)
-        #console.print(f"[green]Initial response {response.text}")
 
         player_input = None
 
@@ -197,7 +187,6 @@ def combat_chat_event(initial_input, ship, enemy_health):
         console.print(f"[green]{event_text}")
 
         enemy_health = calculate_damage(ship, enemy_health, response.text)
-        #console.rule("[bold red]Conversation:")
 
         console.print("[blue]How to proceed?")
         while player_input != 'quit':
@@ -206,14 +195,7 @@ def combat_chat_event(initial_input, ship, enemy_health):
             event_text = response.text
             console.print(f"[green]{event_text}")
             enemy_health = calculate_damage(ship, enemy_health, response.text)
-
         final_response = response.text or "No response given."
-        # response = model.generate_content(
-        #     f"Write a brief intro about this fictional, science fiction encounter where our starship, the {ship.name} "
-        #     f"engages in a {event_type} encounter at the location: {location}. Keep it to two lines of text."
-        # )
-        ##print(to_markdown(response.text))
-        ##print(response.text)
 
     else:
         final_response = " Placeholder since no Google API Key was used"
