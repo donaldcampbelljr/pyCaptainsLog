@@ -1,6 +1,8 @@
 import yaml
 from datetime import datetime
 from rich import print
+from rich.console import Console
+from rich.table import Table
 from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yaml, create_starsystem_from_dict
 from starsystem import StarSystem, clear
 import os
@@ -14,7 +16,7 @@ from ship import Ship
 def main():
     playing = True
 
-
+    console = Console()
 
     # Initialize Game
 
@@ -49,7 +51,7 @@ def main():
 
         count +=1
         print(f"{count}  {'Unexplored'}  ")
-        print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage event[/yellow]  'q':[red]quit[/red]  's':[green]save[/green]")
+        print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage event[/yellow]  'status':[cyan]ship status[/cyan] 'q':[red]quit[/red]  's':[green]save[/green]")
         # print(f"Press 'q' to quit.")
         # print(f"Press 's' to save and quit.")
 
@@ -80,6 +82,11 @@ def main():
                 else:
                     print("Encounter [red]not successful![/red]")
                 save_star_system(current_system)
+        elif verb == 'status':
+            table = build_table(player_ship)
+            clear()
+            console.print(table)
+
         else:
             try:
                 next_system = int(verb) #temp holder for now, just assume if int user wants to jump
@@ -161,17 +168,22 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
 
     if type == 'science':
         value = ship.science
-        console.rule("[bold red]Science Event:")
-        science_event(ship, type, value, current_system.events['system']['event_text'], current_system.name)
+        console.rule("[bold red]Attempting Science Event:")
+        console.print("[bold red]Outcome:")
+        success = comparison_dice(roll_die(value), success_num)
+        if success:
+            console.print("[bold green]Roll successful!")
+            science_event(ship, type, value, current_system.events['system']['event_text'], current_system.name)
+        else:
+            console.print("[bold red]Roll unsuccessful!")
     if type == 'diplomacy':
         value = ship.diplomacy
+        console.rule("[bold red]Outcome:")
+        success = comparison_dice(roll_die(value), success_num)
     if type == 'combat':
         value = ship.strength
-
-    console.rule("[bold red]Outcome:")
-    success = comparison_dice(roll_die(value), success_num)
-
-
+        console.rule("[bold red]Outcome:")
+        success = comparison_dice(roll_die(value), success_num)
 
     # if successful
     return success
@@ -189,6 +201,25 @@ def science_event(ship, type, value, event_text, system_name):
     return success
 
 
+def build_table(player_ship):
+    # self.location = location
+    # self.health = 100
+    # self.crew = 50
+    # self.strength = 80
+    # self.science = 80
+    # self.diplomacy = 80
+    table = Table(title=f"{player_ship.name.upper()} Status")
+
+    table.add_column("Location", justify="right", style="cyan", no_wrap=True)
+    table.add_column("Health", style="magenta")
+    table.add_column("Crew", justify="right", style="green")
+    table.add_column("Combat Strength", justify="right", style="cyan")
+    table.add_column("Science", justify="right", style="magenta")
+    table.add_column("Diplomacy", justify="right", style="green")
+
+    table.add_row(player_ship.location.name, str(player_ship.health), str(player_ship.crew), str(player_ship.strength), str(player_ship.science), str(player_ship.diplomacy))
+
+    return table
 
 if __name__ == "__main__":
     main()

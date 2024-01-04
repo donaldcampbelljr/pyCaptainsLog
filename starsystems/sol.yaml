@@ -7,9 +7,9 @@ events:
       success_number: 40
       type: diplomacy
   system:
-    event_text: In the vast expanse of the universe, the starship Enterprise, on a
-      mission of exploration, finds itself in the Sol system near Earth, about to
-      initiate science protocols upon detecting anomalous energy readings.
+    event_text: In the uncharted expanse of Sol, the starship Enterprise, captained
+      by the resolute James T. Kirk, embarks on a pivotal scientific rendezvous, seeking
+      answers to the mysteries that shroud this unexplored realm.
     success_number: 30
     type: science
 file_name: sol.yaml
@@ -19,6 +19,7 @@ intro_text: In a distant corner of the galaxy lies the Sol system, home to the s
 linked_systems:
 - alpha_centauri
 - Aeth Prime Prime
+- Aetha Major
 planets:
 - Earth
 - Mars
