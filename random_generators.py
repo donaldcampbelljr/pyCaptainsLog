@@ -156,7 +156,12 @@ def combat_chat_event(initial_input, ship, enemy_health):
 
         def calculate_damage(ship, enemy_health, text):
             import re
-            damage = int(re.findall(r"\d+", text)[0])
+
+            find_ints = re.findall(r"\d+", text)
+            if find_ints is not None:
+                damage = int(find_ints[0])
+            else:
+                damage = 0
 
             if 'your' or 'Your' in text:
                 # Get number and subtract from player ship

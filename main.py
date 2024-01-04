@@ -6,7 +6,7 @@ from rich.table import Table
 from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yaml, create_starsystem_from_dict
 from starsystem import StarSystem, clear
 import os
-from universe import universe_save
+from universe import universe_save, build_universe_table
 from random_generators import roll_die, comparison_dice, get_event_text,chat_event, combat_chat_event
 from ship import Ship
 from rich.layout import Layout
@@ -52,7 +52,7 @@ def main():
 
         count +=1
         print(f"{count}  {'Unexplored'}  ")
-        print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage event[/yellow]  'status':[cyan]ship status[/cyan] 'q':[red]quit[/red]  's':[green]save[/green]")
+        print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage event[/yellow]  'status':[cyan]ship status[/cyan] 'systems':[dark_orange]visited systems[/dark_orange] 'q':[red]quit[/red]  's':[green]save[/green]")
         # print(f"Press 'q' to quit.")
         # print(f"Press 's' to save and quit.")
 
@@ -84,11 +84,15 @@ def main():
                     print("Encounter [red]NOT SUCCESSFUL![/red]")
                 save_star_system(current_system)
         elif verb == 'status':
-            table = build_table(player_ship)
+            table = build_status_table(player_ship)
             #clear()
             console.clear()
             console.print(table)
-
+        elif verb == 'systems':
+            table = build_universe_table()
+            #clear()
+            console.clear()
+            console.print(table)
         else:
             try:
                 next_system = int(verb) #temp holder for now, just assume if int user wants to jump
@@ -216,7 +220,7 @@ def combat_event(ship, type, value, event_text, system_name):
     return success
 
 
-def build_table(player_ship):
+def build_status_table(player_ship):
     # self.location = location
     # self.health = 100
     # self.crew = 50
