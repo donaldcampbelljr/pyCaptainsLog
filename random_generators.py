@@ -159,7 +159,10 @@ def combat_chat_event(initial_input, ship, enemy_health):
 
             find_ints = re.findall(r"\d+", text)
             if find_ints is not None:
-                damage = int(find_ints[0])
+                try:
+                    damage = int(find_ints[0])
+                except IndexError:
+                    damage = 0
             else:
                 damage = 0
 
