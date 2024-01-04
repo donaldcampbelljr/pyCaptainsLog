@@ -2,6 +2,8 @@ import random
 import os
 import google.generativeai as genai
 from rich import print
+from rich.console import Console
+
 
 def generate_system_name():
     first_syllables = ["Exo", "Aeth", "Xan", "Sol", "Terra", "Bel", "Mar", "Jov", "Neb", "Kep"]
@@ -96,6 +98,53 @@ def get_event_text(location, event_type, ship):
 
     return event_text
 
+def chat_event(initial_input):
+    console = Console()
+
+    GOOGLE_API_KEY = None
+    try:
+        GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+    except KeyError:
+        print("No GOOGLE_API_KEY SET!")
+
+    if GOOGLE_API_KEY is not None:
+        def get_gemini_reponse(input):
+            response = chat.send_message(input,stream=False)
+            return response
+
+
+        genai.configure(api_key=GOOGLE_API_KEY)
+
+        model = genai.GenerativeModel('gemini-pro')
+        chat = model.start_chat(history=[])
+
+        console.rule("[bold red]Loading Conversation:")
+        response = get_gemini_reponse(initial_input)
+        #console.print(f"[green]Initial response {response.text}")
+
+        player_input = None
+
+        #console.rule("[bold red]Conversation:")
+
+        console.print("[blue]What would you like to know?")
+        while player_input != 'quit':
+            player_input = input("> ")
+            response = get_gemini_reponse(player_input)
+            event_text = response.text
+            console.print(f"[green]{event_text}")
+
+        final_response = response.text or "No response given."
+        # response = model.generate_content(
+        #     f"Write a brief intro about this fictional, science fiction encounter where our starship, the {ship.name} "
+        #     f"engages in a {event_type} encounter at the location: {location}. Keep it to two lines of text."
+        # )
+        ##print(to_markdown(response.text))
+        ##print(response.text)
+
+    else:
+        final_response = " Placeholder since no Google API Key was used"
+
+    return final_response
 
 def roll_die(num_sides):
     # simply roll the die

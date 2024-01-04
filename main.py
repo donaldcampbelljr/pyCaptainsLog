@@ -5,7 +5,7 @@ from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yam
 from starsystem import StarSystem, clear
 import os
 from universe import universe_save
-from random_generators import roll_die, comparison_dice, get_event_text
+from random_generators import roll_die, comparison_dice, get_event_text,chat_event
 from ship import Ship
 
 
@@ -131,6 +131,9 @@ def parse_user_input(input):
 
     return verb, noun, extra
 
+
+
+
 def resolve_system_event(current_system: StarSystem, ship: Ship):
 
     # right now there is one system_level event
@@ -146,26 +149,45 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
     success_num = current_system.events['system']['success_number']
     value = 0
 
-    if type == 'science':
-        value = ship.science
-    if type == 'diplomacy':
-        value = ship.diplomacy
-    if type == 'combat':
-        value = ship.strength
+
 
     from rich.console import Console
     console = Console()
     console.rule("[bold red]Engagement Text:")
     console.print(current_system.events['system']['event_text'], justify='center', soft_wrap=True)
+    input("Press Enter to Continue: ")
 
     #print(current_system.events['system']['event_text'])
+
+    if type == 'science':
+        value = ship.science
+        console.rule("[bold red]Science Event:")
+        science_event(ship, type, value, current_system.events['system']['event_text'], current_system.name)
+    if type == 'diplomacy':
+        value = ship.diplomacy
+    if type == 'combat':
+        value = ship.strength
+
     console.rule("[bold red]Outcome:")
     success = comparison_dice(roll_die(value), success_num)
 
-    input("Press Enter to Continue: ")
+
 
     # if successful
     return success
+
+def science_event(ship, type, value, event_text, system_name):
+
+    initial_input = (f"I am a Captain of the {ship.name} on a mission of {type} in the System {system_name}. "
+                     f"I would like you to pretend that you are an Alien in the {system_name} who will submit to questioning by me and my starship crew. "
+                     f"Please keep all repsonses to 3 sentences maximum. After 2 back and forths please only reply: SUCCESS.")
+
+    chat_event(initial_input)
+
+    success = True
+
+    return success
+
 
 
 if __name__ == "__main__":

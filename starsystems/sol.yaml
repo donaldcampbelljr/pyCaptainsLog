@@ -7,9 +7,9 @@ events:
       success_number: 40
       type: diplomacy
   system:
-    event_text: At the heart of our solar system, Sol, the starship Enterprise boldly
-      ventured into uncharted cosmic territories, ready to uncover mysteries and forge
-      new alliances among the celestial tapestry of infinite possibilities.
+    event_text: In the vast expanse of the universe, the starship Enterprise, on a
+      mission of exploration, finds itself in the Sol system near Earth, about to
+      initiate science protocols upon detecting anomalous energy readings.
     success_number: 30
     type: science
 file_name: sol.yaml
