@@ -33,7 +33,8 @@ def generate_planets_list():
 def get_intro_text(system_name):
 
     # First see if the Google API Key is available, else, generate some random text
-
+    console = Console()
+    console.clear()
     GOOGLE_API_KEY = None
     try:
         GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
@@ -41,7 +42,8 @@ def get_intro_text(system_name):
         print("None")
 
     if GOOGLE_API_KEY is not None:
-        print("JUMPING INTO THE UNKNOWN....\n")
+        console.print("[yellow3]JUMPING INTO THE UNKNOWN....")
+        #print("JUMPING INTO THE UNKNOWN....\n")
         genai.configure(api_key=GOOGLE_API_KEY)
 
         model = genai.GenerativeModel('gemini-pro')

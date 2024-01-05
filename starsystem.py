@@ -7,6 +7,7 @@ from os import system, name
 from constants import STAR_DIRECTORY
 from random_generators import generate_system_name, generate_alien_name, generate_planets_list, get_intro_text
 from rich import print
+from rich.console import Console
 
 class StarSystem():
     """
@@ -148,12 +149,13 @@ def jump_to_starsystem(current_system: StarSystem, next_system_name: str,):
     # check if starsystem already exists (the yaml)
     # create new star system as last option.
 
-    print(f"Current System: {current_system}\n")
+    #print(f"Current System: {current_system}\n")
 
+    console = Console()
     if next_system_name == "unexplored":
         # Now we should create a new star system:
         next_system = create_random_starsystem(source_system=current_system.name)
-        print(f"Next System: {next_system.name}\n")
+        #print(f"Next System: {next_system.name}\n")
 
         # must add the new system to the current system links
         current_system.linked_systems.append(next_system.name)
@@ -162,8 +164,9 @@ def jump_to_starsystem(current_system: StarSystem, next_system_name: str,):
         if current_system.name == next_system_name:
             print("You are already in this system.")
             next_system = current_system
-            clear()
-            print("Successful Jump")
+            console.clear()
+            console.print("[chartreuse3]Successful Jump")
+            #print("Successful Jump")
         else:
             path_starsystems = os.path.abspath(STAR_DIRECTORY)
             filenames = []
@@ -179,14 +182,14 @@ def jump_to_starsystem(current_system: StarSystem, next_system_name: str,):
             if filename in filenames:
                 next_system = load_starsystem_yaml(filename)
                 next_system = create_starsystem_from_dict(next_system)
-                clear()
+                console.clear()
                 print("[chartreuse3]Successful Jump[/chartreuse3]")
             else:
                 print("SYSTEM NOT FOUND")
                 next_system = current_system
                 print("JUMP NOT COMPLETED")
 
-    print(next_system.intro_text)
+    #print(next_system.intro_text)
     return next_system
 
 

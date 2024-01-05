@@ -37,11 +37,17 @@ def main():
 
     # from rich.style import Style
     # my_style = Style(color="blue", bold=True)
-    clear()
-    print(f"\n[dark_goldenrod]{starting_location.name}[/dark_goldenrod]")
+    console.clear()
+
+    #print(f"\n[dark_goldenrod]{starting_location.name}[/dark_goldenrod]")
+
+    from rich.panel import Panel
 
 
     while playing:
+        console.rule(f"\n[dark_goldenrod]{current_system.name}[/dark_goldenrod]")
+
+        print(Panel(current_system.intro_text,))
 
         if player_ship.health < 0:
             console.clear()
@@ -52,13 +58,21 @@ def main():
         player_ship.location = current_system
         print("\nWhere would you like to jump?")
         count = 0
-        print(f"Adjacent Systems:")
+        #print(f"Adjacent Systems:")
+
+        from rich.text import Text
+        adjacent_text = Text("Adjacent Systems")
         for i in current_system.linked_systems:
             count += 1
-            print(f"{count}  {i}  ")
+            adjacent_text.append(f"\n{count}  {i}  ")
+            #print(f"{count}  {i}  ")
 
         count +=1
-        print(f"{count}  {'Unexplored'}  ")
+        adjacent_text.append(f"\n{count}  {'Unexplored'}  ")
+        print(Panel(adjacent_text, title="Adjacent Systems",))
+
+        #print(Panel(f"\n{count}  {'Unexplored'}  ", title="Unexplored", ))
+        #print(f"{count}  {'Unexplored'}  ")
         print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage event[/yellow]  'status':[cyan]ship status[/cyan] 'systems':[dark_orange]visited systems[/dark_orange] 'q':[red]quit[/red]  's':[green]save[/green]")
         # print(f"Press 'q' to quit.")
         # print(f"Press 's' to save and quit.")
@@ -95,6 +109,7 @@ def main():
             #clear()
             console.clear()
             console.print(table)
+            input("Press Enter to Continue:")
         elif verb == 'systems':
             table = build_universe_table()
             #clear()
@@ -111,7 +126,7 @@ def main():
                 next_system = "unexplored"
             else:
                 next_system = current_system.linked_systems[count - 2]
-            print(next_system)
+            #print(next_system)
 
             next_system = jump_to_starsystem(current_system, next_system)
             current_system = next_system
