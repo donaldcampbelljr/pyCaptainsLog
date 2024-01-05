@@ -21,6 +21,9 @@ class Ship():
         self.strength = 80
         self.science = 80
         self.diplomacy = 80
+        self.level = 1
+        self.experience = 0
+        self.exp_next_level = self.level * 100 * 1.20
 
     def scan(self) -> None:
         """

@@ -242,11 +242,13 @@ def build_status_table(player_ship):
     table.add_column("Location", justify="right", style="cyan", no_wrap=True)
     table.add_column("Health", style="magenta")
     table.add_column("Crew", justify="right", style="green")
-    table.add_column("Combat Strength", justify="right", style="cyan")
+    table.add_column("Strength", justify="right", style="cyan")
     table.add_column("Science", justify="right", style="magenta")
     table.add_column("Diplomacy", justify="right", style="green")
+    table.add_column("Exp", justify="right", style="blue")
+    table.add_column("Exp Nxt Lvl", justify="right", style="cyan")
 
-    table.add_row(player_ship.location.name, str(player_ship.health), str(player_ship.crew), str(player_ship.strength), str(player_ship.science), str(player_ship.diplomacy))
+    table.add_row(player_ship.location.name, str(player_ship.health), str(player_ship.crew), str(player_ship.strength), str(player_ship.science), str(player_ship.diplomacy), str(player_ship.experience), str(player_ship.exp_next_level))
 
     return table
 
