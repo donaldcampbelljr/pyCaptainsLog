@@ -1,9 +1,0 @@
-StarSystemName: DefaultSystemName
-alien: DefaultAlienName
-intro_text: Welcome to the DefaultSystemName system!
-linked_systems:
-- origin1
-planets:
-- Earth
-- Mars
-- Pluto

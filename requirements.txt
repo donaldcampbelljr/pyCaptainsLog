@@ -1,2 +1,6 @@
 rich
 pyaml
+pandas
+matplotlib
+networkx
+google-generativeai

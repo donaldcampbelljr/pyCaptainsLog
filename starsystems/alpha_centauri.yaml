@@ -1,0 +1,24 @@
+StarSystemName: Alpha_Centauri
+alien: Centaurians
+events:
+  planet:
+    Proxima Centauri a:
+      event_text: Some diplomacy event text
+      success_number: 40
+      type: diplomacy
+  system:
+    event_text: This system is inhabited by a hostile alien race. The ship will engage
+      in combat.
+    success_number: 30
+    type: combat
+file_name: alpha_centauri.yaml
+intro_text: The Alpha Centauri system is a star system located in the Alpha Centauri
+  constellation, approximately 4.3 light-years away from Earth. It consists of three
+  stars Alpha Centauri A, Alpha Centauri B, and Alpha Centauri C (also known as Proxima
+  Centauri).
+linked_systems:
+- sol
+planets:
+- Proxima Centauri a
+- Proxima Centauri b
+- Proxima Centauri c
