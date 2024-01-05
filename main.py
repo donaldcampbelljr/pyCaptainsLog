@@ -152,6 +152,17 @@ def parse_user_input(input):
     return verb, noun, extra
 
 
+def level_up(ship, type):
+    ship.experience += 20
+    if type == 'combat':
+        ship.strength += 5
+    if type == 'science':
+        ship.science += 5
+    if type == 'diplomacy':
+        ship.crew += 5
+    if ship.experience > ship.exp_next_level:
+        print("LEVEL UP!")
+
 
 
 def resolve_system_event(current_system: StarSystem, ship: Ship):
@@ -200,6 +211,8 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
         success = True
 
     # Perform experience and leveling up here?
+    if success:
+        level_up(ship, type)
 
     # if successful
     return success
