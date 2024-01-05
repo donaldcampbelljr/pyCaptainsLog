@@ -42,6 +42,13 @@ def main():
 
 
     while playing:
+
+        if player_ship.health < 0:
+            console.clear()
+            console.print("[bold red] SHIP DESTROYED")
+            console.print("[bold red] Game Over")
+            break
+
         player_ship.location = current_system
         print("\nWhere would you like to jump?")
         count = 0
@@ -165,7 +172,7 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
 
     from rich.console import Console
     console = Console()
-    console.rule("[bold red]Engagement Text:")
+    console.rule("[bold red]Encounter Text:")
     console.print(current_system.events['system']['event_text'], justify='center', soft_wrap=True)
     input("Press Enter to Continue: ")
 
@@ -175,7 +182,8 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
         value = ship.science
         console.rule("[bold red]Attempting Science Event:")
         console.print("[bold red]Outcome:")
-        success = comparison_dice(roll_die(value), success_num)
+        #success = comparison_dice(roll_die(value), success_num)
+        success = True
         if success:
             console.print("[bold green]Roll successful!")
             science_event(ship, type, value, current_system.events['system']['event_text'], current_system.name)
@@ -191,14 +199,16 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
         combat_event(ship, type, value, current_system.events['system']['event_text'], current_system.name)
         success = True
 
+    # Perform experience and leveling up here?
+
     # if successful
     return success
 
 def science_event(ship, type, value, event_text, system_name):
 
     initial_input = (f"I am a Captain of the {ship.name} on a mission of {type} in the System {system_name}. "
-                     f"I would like you to pretend that you are an Alien in the {system_name} who will submit to questioning by me and my starship crew. "
-                     f"Please keep all repsonses to 3 sentences maximum. After 2 back and forths please only reply: SUCCESS.")
+                     f"You will pretend that you are an Alien in the {system_name} who will submit to questioning by me and my starship crew. "
+                     f"Please keep all repsonses to 3 sentences maximum.")
 
     chat_event(initial_input)
 

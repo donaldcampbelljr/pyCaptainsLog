@@ -95,6 +95,15 @@ def get_event_text(location, event_type, ship):
 
     return event_text
 
+
+def check_destroyed(event_text):
+    if 'destroyed' in event_text:
+        return True
+    elif 'Destroyed' in event_text:
+        return True
+    else:
+        return False
+
 def chat_event(initial_input):
     console = Console()
 
@@ -174,7 +183,7 @@ def combat_chat_event(initial_input, ship, enemy_health):
                 # don't do anything
                 pass
 
-            if 'my' or 'My' in text:
+            if 'my' or 'My' or 'I' in text:
                 # get number and subtract from enemy ship
                 enemy_health = enemy_health - damage
 
@@ -198,11 +207,21 @@ def combat_chat_event(initial_input, ship, enemy_health):
 
         console.print("[blue]How to proceed?")
         while player_input != 'quit':
+            console.print(f"[dark_red]Enemy: {enemy_health}[/dark_red]  [sea_green2]Ship: {ship.health}[/sea_green2]")
             player_input = input("> ")
-            response = get_gemini_reponse(f"Your ship's health is now: {enemy_health} My ship's health is now: {ship.health} " + player_input + " How much damage do you take and do you counter attack? If so how much damage do I take?")
+            response = get_gemini_reponse(f"Your ship's health is now: {enemy_health} My ship's health is now: {ship.health} " + player_input + "If I attack, how much damage do you take and do you counter attack? If you counterattack, how much damage do I take?")
             event_text = response.text
             console.print(f"[green]{event_text}")
             enemy_health = calculate_damage(ship, enemy_health, response.text)
+            if check_destroyed(event_text):
+                console.print(f"[magenta]Combat finished!! Ship Destroyed!")
+                break
+            if enemy_health < 0:
+                console.print(f"[magenta]Combat finished!! Enemy Destroyed!")
+                break
+            if ship.health < 0:
+                console.print(f"[magenta]Combat finished!! Your ship is destroyed!")
+                break
         final_response = response.text or "No response given."
 
     else:

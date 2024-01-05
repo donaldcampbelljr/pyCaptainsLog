@@ -16,7 +16,7 @@ class Ship():
         self.name = name
         # Mars, Pluto, Alpha Centauri, Etc.
         self.location = location
-        self.health = 100
+        self.health = 40
         self.crew = 50
         self.strength = 80
         self.science = 80
