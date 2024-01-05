@@ -5,6 +5,7 @@
 .idea/modules.xml
 .idea/pyCaptainsLog.iml
 .idea/vcs.xml
+.ipynb_checkpoints
 .idea/inspectionProfiles/profiles_settings.xml
 __pycache__/constants.cpython-310.pyc
 __pycache__/model_loading.cpython-310.pyc
