@@ -166,7 +166,6 @@ def jump_to_starsystem(current_system: StarSystem, next_system_name: str,):
             next_system = current_system
             console.clear()
             console.print("[chartreuse3]Successful Jump")
-            #print("Successful Jump")
         else:
             path_starsystems = os.path.abspath(STAR_DIRECTORY)
             filenames = []
@@ -189,7 +188,6 @@ def jump_to_starsystem(current_system: StarSystem, next_system_name: str,):
                 next_system = current_system
                 print("JUMP NOT COMPLETED")
 
-    #print(next_system.intro_text)
     return next_system
 
 
@@ -197,7 +195,6 @@ def load_starsystem_yaml(starsystemfilename) -> StarSystem:
 
 
     path_starsystems =  os.path.abspath(STAR_DIRECTORY)
-    # This is incorrect syntax for appending filename to path as a file in the directory: os.path.join(path_starsystems + file_name)
     file_name = starsystemfilename
 
     file_path = os.path.join(path_starsystems , file_name)

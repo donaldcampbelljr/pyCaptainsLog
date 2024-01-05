@@ -1,6 +1,5 @@
 import os
-from os import walk, path
-from os import system, name
+from os import walk
 from constants import STAR_DIRECTORY
 import pandas as pd
 from rich.table import Table

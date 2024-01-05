@@ -43,7 +43,6 @@ def get_intro_text(system_name):
 
     if GOOGLE_API_KEY is not None:
         console.print("[yellow3]JUMPING INTO THE UNKNOWN....")
-        #print("JUMPING INTO THE UNKNOWN....\n")
         genai.configure(api_key=GOOGLE_API_KEY)
 
         model = genai.GenerativeModel('gemini-pro')
@@ -134,8 +133,6 @@ def chat_event(initial_input):
 
         event_text = response.text
         console.print(f"[green]{event_text}")
-
-        #console.rule("[bold red]Conversation:")
 
         console.print("[blue]How to proceed?")
         while player_input != 'quit':

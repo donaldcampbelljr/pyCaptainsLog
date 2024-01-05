@@ -7,9 +7,9 @@ events:
       success_number: 40
       type: diplomacy
   system:
-    event_text: In the vast expanse of the cosmos, the USS Enterprise, a beacon of
-      exploration, arrives at Sol, our solar system's celestial heart, for an extraordinary
-      scientific mission.
+    event_text: In the vast expanse of the cosmos, the USS Reliant, a beacon of exploration,
+      arrives at Sol, our solar system's celestial heart, for an extraordinary scientific
+      mission.
     success_number: 30
     type: science
 file_name: sol.yaml

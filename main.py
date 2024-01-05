@@ -1,15 +1,12 @@
-import yaml
-from datetime import datetime
 from rich import print
 from rich.console import Console
 from rich.table import Table
 from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yaml, create_starsystem_from_dict
 from starsystem import StarSystem, clear
-import os
 from universe import universe_save, build_universe_table
 from random_generators import roll_die, comparison_dice, get_event_text,chat_event, combat_chat_event
 from ship import Ship
-from rich.layout import Layout
+from rich.panel import Panel
 
 
 
@@ -20,28 +17,16 @@ def main():
     console = Console()
 
     # Initialize Game
-
-    # Do a loading screen, basically ask the user if they are ready to load the galaxy?
-
-    #star_systems = load_starsystem_yaml()
-
-    #new_system = StarSystem(name="a", planets=["Earth", "Mars", "Pluto"], alien = "aliens", linked_systems = ["origin1"], intro_text = f"Welcome to the system!")
-
     starting_location = load_starsystem_yaml("sol.yaml")
     starting_location = create_starsystem_from_dict(starting_location)
 
-    # Jump to new or old star system:
     current_system = starting_location
 
-    player_ship = Ship(name="Enterprise", location=current_system)
+    player_ship = Ship(name="Reliant", location=current_system)
 
-    # from rich.style import Style
-    # my_style = Style(color="blue", bold=True)
     console.clear()
 
-    #print(f"\n[dark_goldenrod]{starting_location.name}[/dark_goldenrod]")
 
-    from rich.panel import Panel
 
 
     while playing:
@@ -58,24 +43,18 @@ def main():
         player_ship.location = current_system
         print("\nWhere would you like to jump?")
         count = 0
-        #print(f"Adjacent Systems:")
 
         from rich.text import Text
         adjacent_text = Text("Adjacent Systems")
         for i in current_system.linked_systems:
             count += 1
             adjacent_text.append(f"\n{count}  {i}  ")
-            #print(f"{count}  {i}  ")
 
         count +=1
         adjacent_text.append(f"\n{count}  {'Unexplored'}  ")
         print(Panel(adjacent_text, title="Adjacent Systems",))
 
-        #print(Panel(f"\n{count}  {'Unexplored'}  ", title="Unexplored", ))
-        #print(f"{count}  {'Unexplored'}  ")
         print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage event[/yellow]  'status':[cyan]ship status[/cyan] 'systems':[dark_orange]visited systems[/dark_orange] 'q':[red]quit[/red]  's':[green]save[/green]")
-        # print(f"Press 'q' to quit.")
-        # print(f"Press 's' to save and quit.")
 
         next_system = None
 
@@ -106,13 +85,11 @@ def main():
                 save_star_system(current_system)
         elif verb == 'status':
             table = build_status_table(player_ship)
-            #clear()
             console.clear()
             console.print(table)
             input("Press Enter to Continue:")
         elif verb == 'systems':
             table = build_universe_table()
-            #clear()
             console.clear()
             console.print(table)
         else:
@@ -126,7 +103,6 @@ def main():
                 next_system = "unexplored"
             else:
                 next_system = current_system.linked_systems[count - 2]
-            #print(next_system)
 
             next_system = jump_to_starsystem(current_system, next_system)
             current_system = next_system
@@ -135,11 +111,8 @@ def main():
 def parse_user_input(input):
     # simple verb noun identifier
     # e.g. explore planet planet a
-
     user_input = input.split()
-
     user_input = map(str.strip, user_input)
-
     user_input = list(user_input)
 
     try:
@@ -183,26 +156,20 @@ def level_up(ship, type):
 def resolve_system_event(current_system: StarSystem, ship: Ship):
 
     # right now there is one system_level event
-    clear()
+    console = Console()
+    console.clear()
 
     for k,v in current_system.events['system'].items():
-        #print(v)
         if k == 'event_text':
             if 'Placeholder' in current_system.events['system']['event_text']:
                 current_system.events['system'][k] = get_event_text(location=current_system.name, event_type=current_system.events['system']['type'], ship=ship)
 
-
     type = current_system.events['system']['type']
     success_num = current_system.events['system']['success_number']
     value = 0
-
-    from rich.console import Console
-    console = Console()
     console.rule("[bold red]Encounter Text:")
     console.print(current_system.events['system']['event_text'], justify='center', soft_wrap=True)
     input("Press Enter to Continue: ")
-
-    #print(current_system.events['system']['event_text'])
 
     if type == 'science':
         value = ship.science
@@ -259,12 +226,6 @@ def combat_event(ship, type, value, event_text, system_name):
 
 
 def build_status_table(player_ship):
-    # self.location = location
-    # self.health = 100
-    # self.crew = 50
-    # self.strength = 80
-    # self.science = 80
-    # self.diplomacy = 80
     table = Table(title=f"{player_ship.name.upper()} Status")
 
     table.add_column("Location", justify="right", style="cyan", no_wrap=True)

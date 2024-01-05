@@ -10,11 +10,7 @@ class Ship():
         :param location: a StarSystem of Class StarSystem
         """
 
-        # Load Model, feed it inputs and then generate items.
-
-
         self.name = name
-        # Mars, Pluto, Alpha Centauri, Etc.
         self.location = location
         self.health = 40
         self.crew = 50
