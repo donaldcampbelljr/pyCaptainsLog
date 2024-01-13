@@ -201,9 +201,13 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
 
 def science_event(ship, type, value, event_text, system_name):
 
-    initial_input = (f"I am a Captain of the {ship.name} on a mission of {type} in the System {system_name}. "
-                     f"You will pretend that you are an Alien in the {system_name} who will submit to questioning by me and my starship crew. "
-                     f"Please keep all repsonses to 3 sentences maximum.")
+    # initial_input = (f"I am a Captain of the {ship.name} on a mission of {type} in the System {system_name}. "
+    #                  f"You will pretend that you are an Alien in the {system_name} who will submit to questioning by me and my starship crew. "
+    #                  f"Please keep all responses to 3 sentences maximum.")
+
+    initial_input = (f"Let us role play in a back and forth conversation where we exchange discussion points. Let us pretend that I am a Captain of the {ship.name} on a mission of {type} in the System {system_name}. "
+                     f"You will pretend that you are an Alien in this same system: {system_name}."
+                     f"Please keep all responses to 1 sentences maximum.")
 
     chat_event(initial_input)
 
