@@ -159,7 +159,13 @@ def combat_chat_event(initial_input, ship, enemy_health):
 
     if GOOGLE_API_KEY is not None:
         def get_gemini_reponse(input):
-            response = chat.send_message(input,stream=False)
+            #response = chat.send_message(input,stream=False, safety_settings={'HARM_CATEGORY_HARASSMENT':'block_none'})
+
+            ## this allows us to have combat without tripping the safety mechanism,e.g. "Fire all phasers!" would sometimes trigger it.
+            response = chat.send_message(input, stream=False,
+                                         safety_settings={'HARM_CATEGORY_HARASSMENT': 'BLOCK_ONLY_HIGH'})
+
+
             return response
 
         def calculate_damage(ship, enemy_health, text):
@@ -208,7 +214,7 @@ def combat_chat_event(initial_input, ship, enemy_health):
         while player_input != 'quit':
             console.print(f"[dark_red]Enemy: {enemy_health}[/dark_red]  [sea_green2]Ship: {ship.health}[/sea_green2]")
             player_input = input("> ")
-            response = get_gemini_reponse(f"Your ship's health is now: {enemy_health} My ship's health is now: {ship.health} " + player_input + "If I attack, how much damage do you take and do you counter attack? If you counterattack, how much damage do I take?")
+            response = get_gemini_reponse(f"Your ship's health is now: {enemy_health} My ship's health is now: {ship.health} " + player_input + "If I am attacking in my previous sentence, how much damage do you take and do you counter attack? If you decide to counterattack, how much damage does my ship take?")
             event_text = response.text
             console.print(f"[green]{event_text}")
             enemy_health = calculate_damage(ship, enemy_health, response.text)
