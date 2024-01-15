@@ -4,7 +4,8 @@ from rich.table import Table
 from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yaml, create_starsystem_from_dict
 from starsystem import StarSystem, clear
 from universe import universe_save, build_universe_table
-from random_generators import roll_die, comparison_dice, get_event_text,chat_event, combat_chat_event
+from random_generators import roll_die, comparison_dice, get_event_text, chat_event, combat_chat_event, \
+    generate_planet_information
 from ship import Ship
 from rich.panel import Panel
 
@@ -54,6 +55,11 @@ def main():
         adjacent_text.append(f"\n{count}  {'Unexplored'}  ")
         print(Panel(adjacent_text, title="Adjacent Systems",))
 
+        planet_text = Text("Nearby Planets:")
+        for i in current_system.planets:
+            planet_text.append((f"\n{i}"))
+        print(Panel(planet_text, title="Nearby Planets:", ))
+
         print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage event[/yellow]  'status':[cyan]ship status[/cyan] 'systems':[dark_orange]visited systems[/dark_orange] 'q':[red]quit[/red]  's':[green]save[/green]")
 
         next_system = None
@@ -73,7 +79,13 @@ def main():
         elif verb == 'e':
             # event logic
             if noun =='planet':
-                print("placeholder for planet event logic")
+                if extra.capitalize() in current_system.planets:
+                    # TODO this will not work if the planet name has spaces
+                    print("placeholder for planet event logic")
+                    planet_name = extra.capitalize()
+                    resolve_planet_event(current_system, player_ship, planet_name)
+                else:
+                    print(f"{extra} is not a nearby planet!")
             else:
                 # assume system level
                 success = resolve_system_event(current_system, player_ship)
@@ -151,6 +163,13 @@ def level_up(ship, type):
     if ship.experience > ship.exp_next_level:
         print("LEVEL UP!")
 
+def resolve_planet_event(current_system: StarSystem, player_ship: Ship, planet_name: str):
+
+    print(current_system)
+    print(player_ship)
+    print(planet_name)
+
+    dict = generate_planet_information(planet_name)
 
 
 def resolve_system_event(current_system: StarSystem, ship: Ship):

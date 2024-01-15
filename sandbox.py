@@ -46,15 +46,20 @@ def main():
         #
         # """
 
+        # Combat but with input parameters
+        # input = f"""
+        #
+        # Pretend you are an enemy ship with {enemy_health} health and that you can attack me (I have a ship with {player_health} health) with either
+        # phasers ({dmg_phaser_min}-{dmg_phaser_max} dmg) or torpedos ({dmg_torp_min}-{dmg_torp_max} dmg).
+        # What do you attack with and much damage does your attack do?
+        # Please answer with a singular word for attack and damage but
+        # add a sentence of descriptive text of the action, with the format being JSON format. If your health is 0, return only singular destroyed in the description.'
+        #
+        # """
+
         input = f"""
-
-        Pretend you are an enemy ship with {enemy_health} health and that you can attack me (I have a ship with {player_health} health) with either 
-        phasers ({dmg_phaser_min}-{dmg_phaser_max} dmg) or torpedos ({dmg_torp_min}-{dmg_torp_max} dmg). 
-        What do you attack with and much damage does your attack do? 
-        Please answer with a singular word for attack and damage but 
-        add a sentence of descriptive text of the action, with the format being JSON format. If your health is 0, return only singular destroyed in the description.'
-
-        """
+        Generate 1 unique planet for a tabletop rpg. Answer in JSON format with primary keys: name, description, planet_type, items. For items, only generate a max of 3 items. Make sure the theme is science fiction.
+"""
 
         response = model.generate_content(input,safety_settings={'HARM_CATEGORY_HARASSMENT': 'BLOCK_ONLY_HIGH'})
 
