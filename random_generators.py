@@ -62,12 +62,15 @@ def generate_planet_information(planet_name: str):
 
         try:
             parsed_dict = json.loads(finaltext)
-
-            for k, v in parsed_dict.items():
-                print(f"{k}\n")
-                print(f"{v}\n")
+            # for k, v in parsed_dict.items():
+            #     print(f"{k}\n")
+            #     print(f"{v}\n")
         except:
             print("Could not load JSON.")
+            parsed_dict = {}
+            parsed_dict["name"] = planet_name
+            parsed_dict["description"] = "place holder description"
+            parsed_dict["items"] = "[place holder items]"
     else:
         parsed_dict = {}
         parsed_dict["name"] = planet_name
