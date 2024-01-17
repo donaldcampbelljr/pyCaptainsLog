@@ -101,8 +101,10 @@ def main():
                 save_star_system(current_system)
         elif verb == 'status':
             table = build_status_table(player_ship)
+            cargotable = build_cargo_table(player_ship)
             console.clear()
             console.print(table)
+            console.print(cargotable)
             input("Press Enter to Continue:")
         elif verb == 'systems':
             table = build_universe_table()
@@ -358,6 +360,18 @@ def build_status_table(player_ship):
     table.add_row(player_ship.location.name, str(player_ship.health), str(player_ship.crew), str(player_ship.strength), str(player_ship.science), str(player_ship.diplomacy), str(player_ship.experience), str(player_ship.exp_next_level))
 
     return table
+
+def build_cargo_table(player_ship):
+    table = Table(title=f"{player_ship.name.upper()} Cargo")
+    table.add_column("Item", justify="right", style="cyan", no_wrap=True)
+    table.add_column("Function", style="magenta")
+    table.add_column("Quantity", style="magenta")
+
+    for n,d in player_ship.cargo.items():
+        table.add_row(str(n), str(d), str(1))
+
+    return table
+
 
 if __name__ == "__main__":
     main()
