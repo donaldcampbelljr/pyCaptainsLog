@@ -180,6 +180,7 @@ def resolve_planet_event(current_system: StarSystem, player_ship: Ship, planet_n
     player_input = None
     while player_input != 'leave':
 
+
         layout = Layout()
         layout.split_column(
             Layout(name="upper"),
@@ -197,23 +198,32 @@ def resolve_planet_event(current_system: StarSystem, player_ship: Ship, planet_n
         # print(Panel("Hello, [red]World!", title="Welcome", subtitle="Thank you"))
 
         if "name" in dict:
-            upper_text = Text(f"You've entered into orbit of the planet {planet_name}\n")
+            upper_text = Text(f"You've entered into orbit of the planet {planet_name}\n", style="cyan3")
         if "description" in dict:
-            upper_text.append(dict["description"]+"\n")
+            upper_text.append(dict["description"]+"\n", style="dark_turquoise")
 
         if upper_text is None:
             upper_text = Text(f"You've entered the orbit of an unknown planet.")
 
         layout["upper"].update(upper_text)
 
+
         if "items" in dict:
             items_text = Text("")
             # for i in dict["items"]:
-            items_text.append(str(dict["items"]))
+            if isinstance(dict["items"], list):
+                for item in dict["items"]:
+                    if "name" in item:
+                        items_text.append(item["name"] + "\n")
+                        # also want to make a lowercase version of the name for picking up
+                        lc_name = item["name"].lower()
+                        lc_name = lc_name.replace(" ", "")
+                        item["lcname"] = lc_name
         else:
             items_text = Text("no items")
 
-        command_text = Text("[bold red] LEAVE ORBIT: `leave` \nCommand2\COmand3\netc")
+        command_text = Text("LEAVE ORBIT: `leave`\n", style="deep_pink1")
+        command_text.append("GET ITEM: `get xxxxx`", style="bright_cyan")
 
         layout["right"].split(
             Layout(Panel(items_text, title="ITEMS")),
@@ -226,7 +236,32 @@ def resolve_planet_event(current_system: StarSystem, player_ship: Ship, planet_n
         #
         # print(layout.tree)
         player_input = input("Your Orders, Captain? > ")
+        verb, noun, extra = parse_user_input(player_input)
 
+        GET_COMMANDS = ["g", "get", "GET", "ge"]
+        if verb == 'l':
+            break
+        elif verb in GET_COMMANDS:
+            if noun:
+                found = False
+                if "items" in dict:
+                    for item in dict["items"]:
+                        if "lcname" in item:
+                            if noun in item["lcname"]:
+                                print(f"GET SUCCESSFUL: {item['name']}")
+                                found = True
+                                if "description" in item:
+                                    desc= item['description']
+                                elif "function" in item:
+                                    desc = item['function']
+                                else:
+                                    desc = "Unknown function"
+                                player_ship.cargo.update({item['name']:desc})
+                if not found:
+                    print(f"Scanners do not show, {noun}, in orbit.")
+
+
+    ## SAVE PLANET INFO AFTER ENGAGEMENT? Or let the player come back whenever and just do it all again?
 
     return 0
 

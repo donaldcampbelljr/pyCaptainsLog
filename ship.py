@@ -20,6 +20,9 @@ class Ship():
         self.level = 1
         self.experience = 0
         self.exp_next_level = self.level * 100 * 1.20
+        self.cargo = {}
+
+
 
     def scan(self) -> None:
         """
