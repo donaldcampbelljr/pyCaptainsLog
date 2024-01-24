@@ -1,5 +1,6 @@
 import random
 import os
+import json
 import google.generativeai as genai
 from rich import print
 from rich.console import Console
@@ -29,6 +30,55 @@ def generate_planets_list():
         system_name = generate_system_name()
         list_of_planets.append(system_name)
     return list_of_planets
+
+def generate_planet_information(planet_name: str):
+    """
+    Generates the more detailed info and stats for a planet. If no API key, just provide defaults.
+    :return: dict of information about the planet
+    """
+    console = Console()
+    console.clear()
+    GOOGLE_API_KEY = None
+    try:
+        GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+    except KeyError:
+        print("None")
+
+    if GOOGLE_API_KEY is not None:
+        console.print("[yellow3]ENTERING PLANETARY ORBIT....")
+        genai.configure(api_key=GOOGLE_API_KEY)
+
+        model = genai.GenerativeModel('gemini-pro')
+
+        input = f"""
+                Generate 1 unique planet for a tabletop rpg with the name {planet_name}. Answer in JSON format with primary keys: name, description, planet_type, items. For items, only generate a max of 3 items. Make sure the theme is science fiction.
+        """
+
+        response = model.generate_content(input)
+
+        print(response.text)
+        finaltext = response.text.replace("`", "")
+        finaltext = finaltext.replace("python", "")
+        finaltext = finaltext.replace("json", "")
+
+        try:
+            parsed_dict = json.loads(finaltext)
+            # for k, v in parsed_dict.items():
+            #     print(f"{k}\n")
+            #     print(f"{v}\n")
+        except:
+            print("Could not load JSON.")
+            parsed_dict = {}
+            parsed_dict["name"] = planet_name
+            parsed_dict["description"] = "place holder description"
+            parsed_dict["items"] = "[place holder items]"
+    else:
+        parsed_dict = {}
+        parsed_dict["name"] = planet_name
+        parsed_dict["description"] = "place holder description"
+        parsed_dict["items"] = "[place holder items]"
+
+    return parsed_dict
 
 def get_intro_text(system_name):
 

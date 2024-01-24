@@ -20,6 +20,10 @@ class Ship():
         self.level = 1
         self.experience = 0
         self.exp_next_level = self.level * 100 * 1.20
+        self.cargo = {}
+
+        self.cargo.update({"Tribbles":"They don't do much, other than make more tribbles."})
+
 
     def scan(self) -> None:
         """

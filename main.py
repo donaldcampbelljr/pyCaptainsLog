@@ -4,9 +4,12 @@ from rich.table import Table
 from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yaml, create_starsystem_from_dict
 from starsystem import StarSystem, clear
 from universe import universe_save, build_universe_table
-from random_generators import roll_die, comparison_dice, get_event_text,chat_event, combat_chat_event
+from random_generators import roll_die, comparison_dice, get_event_text, chat_event, combat_chat_event, \
+    generate_planet_information
 from ship import Ship
 from rich.panel import Panel
+from rich.text import Text
+from rich.layout import Layout
 
 
 
@@ -44,7 +47,7 @@ def main():
         print("\nWhere would you like to jump?")
         count = 0
 
-        from rich.text import Text
+
         adjacent_text = Text("Adjacent Systems")
         for i in current_system.linked_systems:
             count += 1
@@ -53,6 +56,11 @@ def main():
         count +=1
         adjacent_text.append(f"\n{count}  {'Unexplored'}  ")
         print(Panel(adjacent_text, title="Adjacent Systems",))
+
+        planet_text = Text("Nearby Planets:")
+        for i in current_system.planets:
+            planet_text.append((f"\n{i}"))
+        print(Panel(planet_text, title="Nearby Planets:", ))
 
         print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage event[/yellow]  'status':[cyan]ship status[/cyan] 'systems':[dark_orange]visited systems[/dark_orange] 'q':[red]quit[/red]  's':[green]save[/green]")
 
@@ -72,8 +80,16 @@ def main():
                 print(f"Quitting. All files saved. Graph produced here: {link}")
         elif verb == 'e':
             # event logic
-            if noun =='planet':
-                print("placeholder for planet event logic")
+            if noun in ['planet', 'p', 'pl']:
+                if extra.title() in current_system.planets:
+                    console.clear()
+                    # TODO this will not work if the planet name has spaces
+                    console.print("[bold red] placeholder for planet event logic")
+                    ##print("")
+                    planet_name = extra.capitalize()
+                    resolve_planet_event(current_system, player_ship, planet_name)
+                else:
+                    print(f"{extra} is not a nearby planet!")
             else:
                 # assume system level
                 success = resolve_system_event(current_system, player_ship)
@@ -85,8 +101,10 @@ def main():
                 save_star_system(current_system)
         elif verb == 'status':
             table = build_status_table(player_ship)
+            cargotable = build_cargo_table(player_ship)
             console.clear()
             console.print(table)
+            console.print(cargotable)
             input("Press Enter to Continue:")
         elif verb == 'systems':
             table = build_universe_table()
@@ -128,12 +146,12 @@ def parse_user_input(input):
     try:
         extra = user_input[2:]
         if len(extra)>1:
-            extra = ''.join(extra) # if the name the user gives is 2 or more words...
-            extra.lower() # lowercase so that all proper names have no spaces and
+            extra = ' '.join(extra) # if the name the user gives is 2 or more words...
+        #     extra.lower() # lowercase so that all proper names have no spaces and
         elif len(extra) == 1:
             extra = extra[0].lower()
-        else:
-            extra = None
+        # else:
+        #     extra = None
     except IndexError:
         extra = None
 
@@ -150,6 +168,108 @@ def level_up(ship, type):
         ship.crew += 5
     if ship.experience > ship.exp_next_level:
         print("LEVEL UP!")
+
+def resolve_planet_event(current_system: StarSystem, player_ship: Ship, planet_name: str):
+
+
+    # print(current_system)
+    # print(player_ship)
+    # print(planet_name)
+    dict = generate_planet_information(planet_name)
+    console = Console()
+    console.clear()
+    console.rule(f"[bold red]System: {current_system.name} Planet: {planet_name}")
+    player_input = None
+    while player_input != 'leave':
+
+
+        layout = Layout()
+        layout.split_column(
+            Layout(name="upper"),
+            Layout(name="lower")
+        )
+        layout["lower"].split_row(
+            Layout(name="left"),
+            Layout(name="right"),
+        )
+
+        # planet_text = Text()
+        # for k, v in dict.items():
+        #     planet_text.append((f"\n{k} : {v}"))
+        # print(Panel(planet_text, title="Planetary Mission", ))
+        # print(Panel("Hello, [red]World!", title="Welcome", subtitle="Thank you"))
+
+        if "name" in dict:
+            upper_text = Text(f"You've entered into orbit of the planet {planet_name}\n", style="cyan3")
+        if "description" in dict:
+            upper_text.append(dict["description"]+"\n", style="dark_turquoise")
+
+        if upper_text is None:
+            upper_text = Text(f"You've entered the orbit of an unknown planet.")
+
+        layout["upper"].update(upper_text)
+
+
+        if "items" in dict:
+            items_text = Text("")
+            # for i in dict["items"]:
+            if isinstance(dict["items"], list):
+                for item in dict["items"]:
+                    if "name" in item:
+                        items_text.append(item["name"] + "\n")
+                        # also want to make a lowercase version of the name for picking up
+                        lc_name = item["name"].lower()
+                        lc_name = lc_name.replace(" ", "")
+                        item["lcname"] = lc_name
+        else:
+            items_text = Text("no items")
+
+        command_text = Text("LEAVE ORBIT: `leave`\n", style="deep_pink1")
+        command_text.append("GET ITEM: `get xxxxx`", style="bright_cyan")
+
+        layout["right"].split(
+            Layout(Panel(items_text, title="ITEMS")),
+            Layout(Panel(command_text, title="COMMANDS"))
+        )
+        layout["left"].update(
+            "Other information can go over here."
+        )
+        print(layout)
+        #
+        # print(layout.tree)
+        player_input = input("Your Orders, Captain? > ")
+        verb, noun, extra = parse_user_input(player_input)
+
+        LEAVE_COMMANDS = ["l", "le", "leave"]
+        GET_COMMANDS = ["g", "get", "GET", "ge"]
+        if verb in LEAVE_COMMANDS:
+            console.clear()
+            console.print("[bold red]Leaving Orbit...")
+            input("> ")
+            break
+        elif verb in GET_COMMANDS:
+            if noun:
+                found = False
+                if "items" in dict:
+                    for item in dict["items"]:
+                        if "lcname" in item:
+                            if noun in item["lcname"]:
+                                print(f"GET SUCCESSFUL: {item['name']}")
+                                found = True
+                                if "description" in item:
+                                    desc= item['description']
+                                elif "function" in item:
+                                    desc = item['function']
+                                else:
+                                    desc = "Unknown function"
+                                player_ship.cargo.update({item['name']:desc})
+                if not found:
+                    print(f"Scanners do not show, {noun}, in orbit.")
+
+
+    ## SAVE PLANET INFO AFTER ENGAGEMENT? Or let the player come back whenever and just do it all again?
+
+    return 0
 
 
 
@@ -244,6 +364,18 @@ def build_status_table(player_ship):
     table.add_row(player_ship.location.name, str(player_ship.health), str(player_ship.crew), str(player_ship.strength), str(player_ship.science), str(player_ship.diplomacy), str(player_ship.experience), str(player_ship.exp_next_level))
 
     return table
+
+def build_cargo_table(player_ship):
+    table = Table(title=f"{player_ship.name.upper()} Cargo")
+    table.add_column("Item", justify="right", style="cyan", no_wrap=True)
+    table.add_column("Function", style="magenta")
+    table.add_column("Quantity", style="magenta")
+
+    for n,d in player_ship.cargo.items():
+        table.add_row(str(n), str(d), str(1))
+
+    return table
+
 
 if __name__ == "__main__":
     main()
