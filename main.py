@@ -80,8 +80,8 @@ def main():
                 print(f"Quitting. All files saved. Graph produced here: {link}")
         elif verb == 'e':
             # event logic
-            if noun =='planet':
-                if extra.capitalize() in current_system.planets:
+            if noun in ['planet', 'p', 'pl']:
+                if extra.title() in current_system.planets:
                     console.clear()
                     # TODO this will not work if the planet name has spaces
                     console.print("[bold red] placeholder for planet event logic")
@@ -146,12 +146,12 @@ def parse_user_input(input):
     try:
         extra = user_input[2:]
         if len(extra)>1:
-            extra = ''.join(extra) # if the name the user gives is 2 or more words...
-            extra.lower() # lowercase so that all proper names have no spaces and
+            extra = ' '.join(extra) # if the name the user gives is 2 or more words...
+        #     extra.lower() # lowercase so that all proper names have no spaces and
         elif len(extra) == 1:
             extra = extra[0].lower()
-        else:
-            extra = None
+        # else:
+        #     extra = None
     except IndexError:
         extra = None
 

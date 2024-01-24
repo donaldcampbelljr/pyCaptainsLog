@@ -1,0 +1,20 @@
+StarSystemName: Exoonia
+alien: Xylosenya
+events:
+  planets:
+    Aethon Prime:
+      event_text: Placeholder event text
+      success_number: 40
+      type: science
+  system:
+    event_text: Placeholder event text
+    success_number: 77
+    type: diplomacy
+file_name: exoonia.yaml
+intro_text: In the far reaches of the galaxy, the Exoonia star system is home to a
+  diverse array of alien life, mysterious artifacts, and uncharted worlds ready to
+  be explored.
+linked_systems:
+- Alpha_Centauri
+planets:
+- Aethon Prime

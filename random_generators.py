@@ -45,6 +45,7 @@ def generate_planet_information(planet_name: str):
         print("None")
 
     if GOOGLE_API_KEY is not None:
+        console.print("[yellow3]ENTERING PLANETARY ORBIT....")
         genai.configure(api_key=GOOGLE_API_KEY)
 
         model = genai.GenerativeModel('gemini-pro')
