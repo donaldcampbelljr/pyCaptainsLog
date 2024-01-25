@@ -1,7 +1,10 @@
 # import json
 import google.generativeai as genai
 import os
-from random_generators import generate_planet_information
+
+from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn
+
+from random_generators import generate_planet_information, generate_generic_event
 from rich.panel import Panel
 from rich.text import Text
 from rich.layout import Layout
@@ -20,6 +23,9 @@ def main():
     planet_name = "Tau Ceti"
 
     dict = generate_planet_information(planet_name)
+
+    spawned_event = generate_generic_event()
+
     console = Console()
     console.clear()
     console.print("\n")
@@ -31,6 +37,18 @@ def main():
             Layout(name="upper"),
             Layout(name="middle"),
             Layout(name="lower")
+        )
+
+        layout["middle"].split_row(Layout(name="middleleft"),Layout(name="middleright"),)
+
+        layout["middleleft"].ratio = 2
+
+        for k, v in spawned_event.items():
+            spawned_event_text = Text("")
+            spawned_event_text.append(f"{k}      {v}\n")
+
+        layout["middleleft"].update(
+            Panel(spawned_event_text, title="EVENT", subtitle="Combat")
         )
 
         layout["lower"].ratio = 2
@@ -54,6 +72,25 @@ def main():
         item_titles = []
         item_descs = []
         item_type = []
+
+        job_progress = Progress(
+            "{task.description}",
+            SpinnerColumn(),
+            BarColumn(),
+            TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+        )
+        job_progress.add_task("[green]Health", total =30)
+        job_progress.add_task("[magenta]Crew", total=10)
+        job_progress.add_task("[cyan]Science", total=10)
+
+        # total = sum(task.total for task in job_progress.tasks)
+        # overall_progress = Progress()
+        # overall_task = overall_progress.add_task("All Jobs", total=int(total))
+
+        layout["middleright"].update(
+            Panel(job_progress, title="test", subtitle="test")
+        )
+
         if "items" in dict:
             items_text = Text("")
             # for i in dict["items"]:
@@ -98,11 +135,23 @@ def main():
 
         LEAVE_COMMANDS = ["l", "le", "leave"]
         GET_COMMANDS = ["g", "get", "GET", "ge"]
+        # for job in job_progress.tasks:
+        #     if not job.finished:
+        #         job_progress.advance(job.id)
+
         if verb in LEAVE_COMMANDS:
             console.clear()
             console.print("[bold red]Leaving Orbit...")
             input("> ")
             break
+        try:
+            sel = int(verb)
+
+            if sel <= len(item_titles):
+                # "use card"
+                print(f"Using {item_titles[sel]}")
+        except:
+            pass
 
 
 if __name__ == "__main__":

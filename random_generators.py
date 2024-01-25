@@ -297,3 +297,11 @@ def comparison_dice(a, b):
         return False
     if a == b:
         return True
+
+def generate_generic_event():
+
+    event = {}
+    event.update({"description": "On the planet Tau Ceti, you discover a hostile alien known as the Orbsaurrians"})
+    event.update({"check":{"Combat": 12}})
+
+    return event
