@@ -14,9 +14,11 @@ class Ship():
         self.location = location
         self.health = 40
         self.crew = 50
-        self.strength = 80
-        self.science = 80
-        self.diplomacy = 80
+
+        self.strength = 6
+        self.science = 8
+        self.diplomacy = 10
+
         self.level = 1
         self.experience = 0
         self.exp_next_level = self.level * 100 * 1.20

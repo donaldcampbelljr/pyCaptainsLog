@@ -288,6 +288,14 @@ def roll_die(num_sides):
     # simply roll the die
     return random.randint(1, num_sides)
 
+def sum_dice_rolls(all_dice):
+
+    final_sum = 0
+
+    for die in all_dice:
+        final_sum += roll_die(die)
+
+    return final_sum
 
 def comparison_dice(a, b):
     print(f"COMPARING: {a} vs {b}")

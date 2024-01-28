@@ -1,10 +1,13 @@
 # import json
+import math
+
 import google.generativeai as genai
 import os
 
 from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn
 
-from random_generators import generate_planet_information, generate_generic_event
+from random_generators import generate_planet_information, generate_generic_event, roll_die, sum_dice_rolls, \
+    comparison_dice
 from rich.panel import Panel
 from rich.text import Text
 from rich.layout import Layout
@@ -32,12 +35,9 @@ def main():
 
 
         return response
+
     
-#     initial_input = """
-# Pretend you are an enemy alien engaged with my ship in combat. I will play cards that deel specific types of damage.
-# """
-    
-        # This is a combat mission example using cards (items) that the ship has gained.
+    # This is a combat mission example using cards (items) that the ship has gained.
     starting_location = load_starsystem_yaml("sol.yaml")
     starting_location = create_starsystem_from_dict(starting_location)
 
@@ -50,12 +50,14 @@ def main():
 
     spawned_event = generate_generic_event()
 
-    health  = ship.health
-    enemy_health = 5
+    health = ship.health
+    enemy_health = 20
+    enemy_attribute = "strength"  # if you play a card against this attribute, you get the full bonus? otherwise, you get half the bonus?
+    enemy_attribute_power = 5
 
     initial_input = (f"Let us roleplay. I am a Captain of the {ship.name} on a mission of combat in the System {planet_name}."
                      f"You should pretend you are a hostile Alien in the {planet_name}. My ship has {health} health. Your alien ship has {enemy_health} health."
-                     f"Please keep all responses to 2 sentences maximum. Every time I play card (starting with the next turn) I want you to narrate the battle.")
+                     f"Please keep all responses to 2 sentences maximum. Every time I play card (starting with the next input) I want you to narrate the battle.")
     
     genai.configure(api_key=GOOGLE_API_KEY)
     model = genai.GenerativeModel('gemini-pro')
@@ -64,13 +66,13 @@ def main():
     response = get_gemini_reponse(initial_input)
     event_text = response.text
 
+
     console = Console()
     console.clear()
     console.print("\n")
     console.rule(f"\n[bold red]System: {planet_name} Planet: {planet_name}")
     
     #player_ship.cargo.update({item['name']:desc})
-
 
     player_input = None
     selection = None
@@ -86,10 +88,13 @@ def main():
 
         layout["middleleft"].ratio = 2
 
-        #if selection is None:
-        selection = event_text   
+        layout["middleright"].split_column(Layout(name="Health"), Layout(name="EnemyHealth"))
+
+        selection = event_text
+
 
         spawned_event_text = Text(selection)
+
 
         layout["middleleft"].update(
             Panel(spawned_event_text, title="EVENT", subtitle="Combat")
@@ -113,50 +118,41 @@ def main():
 
         layout["upper"].update(upper_text)
 
-        job_progress = Progress(
+        health_progress = Progress(
             "{task.description}",
             SpinnerColumn(),
             BarColumn(),
             TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
         )
 
-        task1 = job_progress.add_task("[green]Health", total=2)
-        task2 = job_progress.add_task("[magenta]Crew", total=2)
-        task3 = job_progress.add_task("[cyan]Science", total=2)
+        task1 = health_progress.add_task("[green]Health", total=2)
+        task2 = health_progress.add_task("[magenta]Crew", total=2)
+        task3 = health_progress.add_task("[cyan]Science", total=2)
 
-        job_progress.update(task1, advance=1)
-        job_progress.update(task2, advance=0.5)
-        job_progress.update(task3, advance=0.9)
+        health_progress.update(task1, advance=1)
+        health_progress.update(task2, advance=0.5)
+        health_progress.update(task3, advance=0.9)
 
-        # total = sum(task.total for task in job_progress.tasks)
-        # overall_progress = Progress()
-        # overall_task = overall_progress.add_task("All Jobs", total=int(total))
-
-        layout["middleright"].update(
-            Panel(job_progress, title="test", subtitle="test")
+        enemy_progress = Progress(
+            "{task.description}",
+            SpinnerColumn(),
+            BarColumn(),
+            TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
         )
 
+        enemy_task1 = enemy_progress.add_task("[green]Health", total=2)
+        enemy_progress.update(enemy_task1, advance=1)
 
-        # if "items" in planet_dict:
-        #     items_text = Text("")
-        #     # for i in dict["items"]:
-        #     if isinstance(dict["items"], list):
-        #         for item in dict["items"]:
-        #             if "name" in item:
-        #                 items_text.append(item["name"] + "\n")
-        #                 # also want to make a lowercase version of the name for picking up
-        #                 lc_name = item["name"].lower()
-        #                 lc_name = lc_name.replace(" ", "")
-        #                 item["lcname"] = lc_name
-        #                 item_titles.append(item["name"])
-        #                 item_descs.append(item["description"])
-        # else:
-        #     items_text = Text("no items")
+        layout["Health"].update(
+            Panel(health_progress, title="HEALTH"),
+        )
+
+        layout["EnemyHealth"].update(
+            Panel(enemy_progress, title="ENEMY HEALTH"),
+        )
 
         cards = generate_cards_dumb()
 
-        # card_keys = list(cards.keys())
-        # card_desc = list(cards.values())
         card_types = ['science', 'combat', 'diplomacy']
 
         item_titles = []
@@ -185,8 +181,13 @@ def main():
             Panel(item_descs[2], title=item_titles[2], subtitle=item_type[2])
         )
 
+        ship_attributes_text = Text(f"STRENGTH: {ship.strength}\nSCIENCE: {ship.science}\nDIPLOMACY: {ship.diplomacy}")
+        enemy_attributes_text = Text(
+            f"Attribute: {enemy_attribute}\nPower: {enemy_attribute_power}")
+
         layout["right"].split(
-            Layout(Panel(str(item_titles[3]), title="UPCOMING ITEMS")),
+            Layout(Panel(ship_attributes_text, title="SHIP ATTRIBUTES")),
+            Layout(Panel(enemy_attributes_text, title="ENEMY ATTRIBUTES")),
             Layout(Panel(command_text, title="COMMANDS"))
         )
 
@@ -197,9 +198,6 @@ def main():
 
         LEAVE_COMMANDS = ["l", "le", "leave"]
         GET_COMMANDS = ["g", "get", "GET", "ge"]
-        # for job in job_progress.tasks:
-        #     if not job.finished:
-        #         job_progress.advance(job.id)
 
         if verb in LEAVE_COMMANDS:
             console.clear()
@@ -213,9 +211,41 @@ def main():
                 # "use card"
                 console.clear()
                 console.print(f"Using {item_titles[sel]}")
-
                 response = get_gemini_reponse(f"I play this card: {item_titles[sel]} with info {item_descs[sel]} and power {item_type[sel]} {item_power[sel]}. Narrate how this affects the battle.")
                 event_text = response.text
+
+                power = []
+                combat_text =[]
+                # Calculate some dice rolls.
+                print(ship[enemy_attribute])
+                if item_type[sel] == enemy_attribute:
+                    power.append(item_power[sel])
+                else:
+                    power.append(math.ceil(item_power[sel]/2))
+
+                #This is lazy right now
+                if enemy_attribute == "strength":
+                    power.append(ship.strength) #need to determine that strength is the right one to use
+                if enemy_attribute == "science":
+                    power.append(ship.science) #need to determine that strength is the right one to use
+                if enemy_attribute == "diplomacy":
+                    power.append(ship.diplomacy)  # need to determine that strength is the right one to use
+
+
+                final_sum = sum_dice_rolls(power)
+                combat_text.append(f"Dice Rolls: {power}  Final Sum: {final_sum}")
+
+                if comparison_dice(final_sum, enemy_attribute_power):
+                    enemy_health = enemy_health - (final_sum-enemy_attribute_power)
+                    combat_text.append(f"  Enemy health is now: {enemy_health}")
+                else:
+                    combat_text.append("  No hit. Enemy Health is Unchanged!!!!")
+
+                if enemy_health <= 0:
+                    console.clear()
+                    console.print("ENEMY DESTROYED")
+                    input(">")
+
         except:
             pass
 
