@@ -193,14 +193,10 @@ def resolve_planet_event(current_system: StarSystem, player_ship: Ship, planet_n
             Layout(name="right"),
         )
 
-        # planet_text = Text()
-        # for k, v in dict.items():
-        #     planet_text.append((f"\n{k} : {v}"))
-        # print(Panel(planet_text, title="Planetary Mission", ))
-        # print(Panel("Hello, [red]World!", title="Welcome", subtitle="Thank you"))
 
+        upper_text = Text()
         if "name" in dict:
-            upper_text = Text(f"You've entered into orbit of the planet {planet_name}\n", style="cyan3")
+            upper_text.append(f"You've entered into orbit of the planet {planet_name}\n", style="cyan3")
         if "description" in dict:
             upper_text.append(dict["description"]+"\n", style="dark_turquoise")
 
@@ -278,6 +274,7 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
     # right now there is one system_level event
     console = Console()
     console.clear()
+    success = False
 
     for k,v in current_system.events['system'].items():
         if k == 'event_text':
