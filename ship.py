@@ -1,3 +1,6 @@
+# from collections.abc import MutableMapping
+# from typing import Any
+
 class Ship():
     """
     The main class that the ship, aka the PLAYER.
@@ -26,6 +29,8 @@ class Ship():
 
         self.cargo.update({"Tribbles":"They don't do much, other than make more tribbles."})
 
+    # def __getitem__(self, __key: Any) -> Any:
+    #     return super().__getitem__(__key)
 
     def scan(self) -> None:
         """

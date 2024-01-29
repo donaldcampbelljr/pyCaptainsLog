@@ -108,8 +108,9 @@ def main():
             Layout(name="right"),
         )
 
+        upper_text = Text()
         if "name" in planet_dict:
-            upper_text = Text(f"You've entered into orbit of the planet {planet_name}", style="cyan3")
+            upper_text.append(f"You've entered into orbit of the planet {planet_name}", style="cyan3")
         if "description" in planet_dict:
             upper_text.append(planet_dict["description"]+"\n", style="dark_turquoise")
 
@@ -217,7 +218,7 @@ def main():
                 power = []
                 combat_text =[]
                 # Calculate some dice rolls.
-                print(ship[enemy_attribute])
+                #print(ship[enemy_attribute])
                 if item_type[sel] == enemy_attribute:
                     power.append(item_power[sel])
                 else:
