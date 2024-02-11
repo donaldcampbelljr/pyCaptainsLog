@@ -14,3 +14,4 @@ __pycache__/main.cpython-310.pyc
 __pycache__/random_generators.cpython-310.pyc
 __pycache__/ship.cpython-310.pyc
 __pycache__/universe.cpython-310.pyc
+.env
