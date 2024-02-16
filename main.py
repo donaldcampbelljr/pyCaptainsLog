@@ -11,8 +11,8 @@ from rich.panel import Panel
 from rich.text import Text
 from rich.layout import Layout
 
-
-
+from constants import PLANET_NOUNS
+from ship  import build_cargo_table, build_status_table
 
 def main():
     playing = True
@@ -72,6 +72,8 @@ def main():
 
         verb, noun, extra = parse_user_input(next_system)
 
+
+
         if verb == 'q':
             playing = False
         elif verb == 's':
@@ -80,7 +82,7 @@ def main():
                 print(f"Quitting. All files saved. Graph produced here: {link}")
         elif verb == 'e':
             # event logic
-            if noun in ['planet', 'p', 'pl']:
+            if noun in PLANET_NOUNS:
                 if extra.title() in current_system.planets:
                     console.clear()
                     # TODO this will not work if the planet name has spaces
@@ -168,6 +170,7 @@ def level_up(ship, type):
         ship.crew += 5
     if ship.experience > ship.exp_next_level:
         print("LEVEL UP!")
+        
 
 def resolve_planet_event(current_system: StarSystem, player_ship: Ship, planet_name: str):
 
@@ -346,32 +349,7 @@ def combat_event(ship, type, value, event_text, system_name):
     return success
 
 
-def build_status_table(player_ship):
-    table = Table(title=f"{player_ship.name.upper()} Status")
 
-    table.add_column("Location", justify="right", style="cyan", no_wrap=True)
-    table.add_column("Health", style="magenta")
-    table.add_column("Crew", justify="right", style="green")
-    table.add_column("Strength", justify="right", style="cyan")
-    table.add_column("Science", justify="right", style="magenta")
-    table.add_column("Diplomacy", justify="right", style="green")
-    table.add_column("Exp", justify="right", style="blue")
-    table.add_column("Exp Nxt Lvl", justify="right", style="cyan")
-
-    table.add_row(player_ship.location.name, str(player_ship.health), str(player_ship.crew), str(player_ship.strength), str(player_ship.science), str(player_ship.diplomacy), str(player_ship.experience), str(player_ship.exp_next_level))
-
-    return table
-
-def build_cargo_table(player_ship):
-    table = Table(title=f"{player_ship.name.upper()} Cargo")
-    table.add_column("Item", justify="right", style="cyan", no_wrap=True)
-    table.add_column("Function", style="magenta")
-    table.add_column("Quantity", style="magenta")
-
-    for n,d in player_ship.cargo.items():
-        table.add_row(str(n), str(d), str(1))
-
-    return table
 
 
 if __name__ == "__main__":
