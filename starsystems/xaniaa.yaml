@@ -1,0 +1,20 @@
+StarSystemName: Xaniaa
+alien: Xylosrynkar
+events:
+  planets:
+    Bel Prime Major:
+      event_text: Placeholder event text
+      success_number: 49
+      type: combat
+  system:
+    event_text: Placeholder event text
+    success_number: 42
+    type: science
+file_name: xaniaa.yaml
+intro_text: The Xaniaa star system, located in the Gamma Quadrant, is a binary system
+  consisting of the stars Xaniaa Prime and Xaniaa Secundus. The system is home to
+  a diverse array of planets, including the lush and inhabited world of Xaniaa III.
+linked_systems:
+- Sol
+planets:
+- Bel Prime Major
