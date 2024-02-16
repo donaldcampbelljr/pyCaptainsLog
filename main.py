@@ -11,7 +11,7 @@ from rich.panel import Panel
 from rich.text import Text
 from rich.layout import Layout
 
-from constants import PLANET_NOUNS
+from constants import PLANET_NOUNS, LEAVE_COMMANDS, GET_COMMANDS
 from ship  import build_cargo_table, build_status_table
 
 def main():
@@ -239,8 +239,7 @@ def resolve_planet_event(current_system: StarSystem, player_ship: Ship, planet_n
         player_input = input("Your Orders, Captain? > ")
         verb, noun, extra = parse_user_input(player_input)
 
-        LEAVE_COMMANDS = ["l", "le", "leave"]
-        GET_COMMANDS = ["g", "get", "GET", "ge"]
+
         if verb in LEAVE_COMMANDS:
             console.clear()
             console.print("[bold red]Leaving Orbit...")
