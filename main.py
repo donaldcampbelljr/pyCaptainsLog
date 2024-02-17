@@ -5,11 +5,13 @@ from starsystem import save_star_system, jump_to_starsystem, load_starsystem_yam
 from starsystem import StarSystem, clear
 from universe import universe_save, build_universe_table
 from random_generators import roll_die, comparison_dice, get_event_text, chat_event, combat_chat_event, \
-    generate_planet_information, get_intro_outro
+    generate_planet_information, get_intro_outro, main_system_event
 from ship import Ship
 from rich.panel import Panel
 from rich.text import Text
 from rich.layout import Layout
+from utils import parse_user_input
+
 
 from constants import PLANET_NOUNS, LEAVE_COMMANDS, GET_COMMANDS, CAPTAIN_QUIPS
 from ship  import build_cargo_table, build_status_table
@@ -129,36 +131,6 @@ def main():
             current_system = next_system
     return 0
 
-def parse_user_input(input):
-    # simple verb noun identifier
-    # e.g. explore planet planet a
-    user_input = input.split()
-    user_input = map(str.strip, user_input)
-    user_input = list(user_input)
-
-    try:
-        verb = user_input[0]
-    except IndexError:
-        verb = None
-
-    try:
-        noun = user_input[1]
-    except IndexError:
-        noun = None
-
-    try:
-        extra = user_input[2:]
-        if len(extra)>1:
-            extra = ' '.join(extra) # if the name the user gives is 2 or more words...
-        #     extra.lower() # lowercase so that all proper names have no spaces and
-        elif len(extra) == 1:
-            extra = extra[0].lower()
-        # else:
-        #     extra = None
-    except IndexError:
-        extra = None
-
-    return verb, noun, extra
 
 
 def level_up(ship, type):
@@ -294,38 +266,19 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
     line = random.choice(CAPTAIN_QUIPS)
     console.rule(f"[bold yellow]{line}")
 
-    intro_panel, outro_panel = get_intro_outro(current_system.name,current_system.events['system']['event_text'])
+    intro_panel, outro_panel, intro_story_text, outro_story_text = get_intro_outro(current_system.name,current_system.events['system']['event_text'])
 
     console.clear()
     console.print(intro_panel)
     input("Press Enter to Continue: ")
+
+    success = main_system_event(intro_story_text, outro_story_text, ship)
+
     console.print(outro_panel)
 
-    ### DO CARD PLAY HERE????
-    # if type == 'science':
-    #     value = ship.science
-    #     console.rule("[bold red]Attempting Science Event:")
-    #     console.print("[bold red]Outcome:")
-    #     #success = comparison_dice(roll_die(value), success_num)
-    #     success = True
-    #     if success:
-    #         console.print("[bold green]Roll successful!")
-    #         science_event(ship, type, value, current_system.events['system']['event_text'], current_system.name)
-    #     else:
-    #         console.print("[bold red]Roll unsuccessful!")
-    # if type == 'diplomacy':
-    #     value = ship.diplomacy
-    #     console.rule("[bold red]Outcome:")
-    #     success = comparison_dice(roll_die(value), success_num)
-    # if type == 'combat':
-    #     value = ship.strength
-    #     console.rule("[bold red]RED ALERT Combat Event:")
-    #     combat_event(ship, type, value, current_system.events['system']['event_text'], current_system.name)
-    #     success = True
-
     # Perform experience and leveling up here?
-    # if success:
-    #     level_up(ship, type)
+    if success:
+        level_up(ship, type)
 
     # if successful
     return success
