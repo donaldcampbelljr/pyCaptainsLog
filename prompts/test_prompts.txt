@@ -1,0 +1,51 @@
+# Prompt1 Anomaly
+Generate a list of science fiction anomalies (3 total) that a player of a 4x game would come across as they explored the galaxy. Use 3 sentences for each anomaly. Format the response in JSON format so that it can be easily parsed using python. IN addition to the above description, place it into one of the following categories: Science, Combat, Diplomacy and assign it an arbitrary power level between 4 and 12. Also include the title
+
+{
+  "anomalies": [
+    {
+      "title": "The Quantum Rift",
+      "category": "Science",
+      "power_level": 10,
+      "description": [
+        "A swirling vortex of energy that appears randomly throughout the galaxy.",
+        "Ships that pass through the rift are teleported to a different location, often light-years away.",
+        "Some believe the rift is a gateway to another dimension."
+      ]
+    },
+    {
+      "title": "The Lost Colony",
+      "category": "Diplomacy",
+      "power_level": 8,
+      "description": [
+        "A group of humans who were cryogenically frozen and sent on a century-long journey to colonize a distant planet.",
+        "The colony ship was never heard from again.",
+        "Numerous expeditions have been launched to find the lost colony, but all have failed. Some believe the colonists are dead, while others believe they have gone into hiding."
+      ]
+    },
+
+# Prompt2
+Generate a list of science fiction star system descriptions (3 total) that a player of a 4x game would come across as they explored the galaxy. Use 3 sentences for each star system description. Format the response in JSON format so that it can be easily parsed using python. Each system must have: name, description, planets, star type. ```
+{
+  "starSystems": [
+    {
+      "name": "Sol",
+      "description": "The home star system of Earth, Sol is a main sequence star of spectral type G2V. It is located in the Orion Arm of the Milky Way galaxy.",
+      "planets": ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"],
+      "starType": "G2V"
+    },
+    {
+      "name": "Alpha Centauri",
+      "description": "The closest star system to Sol, Alpha Centauri is a triple star system located about 4.3 light-years away. It consists of two Sun-like stars (Alpha Centauri A and B) and a red dwarf star (Alpha Centauri C).",
+      "planets": ["Alpha Centauri Bb", "Alpha Centauri Bc"],
+      "starType": "G2V + K1V + M5V"
+    },
+    {
+      "name": "Sirius",
+      "description": "The brightest star in the night sky, Sirius is a binary star system located about 8.6 light-years away. It consists of a main sequence star (Sirius A) and a white dwarf star (Sirius B).",
+      "planets": ["Sirius B"],
+      "starType": "A1V"
+    }
+  ]
+}
+```

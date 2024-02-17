@@ -14,9 +14,10 @@ class StarSystem():
     The main class that intializes star systems and is populated with attributes (planets, etc).
     """
 
-    def __init__(self, name, planets, alien, linked_systems, intro_text, events) -> None:
+    def __init__(self, name, planets, alien, linked_systems, intro_text, events, planets_unlocked) -> None:
 
         # Load Model, feed it inputs and then generate items.
+
 
         self.name = name
         self.planets = planets
@@ -29,6 +30,12 @@ class StarSystem():
         self.file_name = name+".yaml"
 
         self.events = events
+
+
+        if planets_unlocked is None:
+            planets_unlocked = False
+
+        self.planets_unlocked = planets_unlocked
 
 
 
@@ -58,6 +65,8 @@ def save_star_system(starsystem):
         starsystem_dict.update({"file_name": starsystem.file_name})
     if starsystem.events:
         starsystem_dict.update({"events": starsystem.events})
+    if starsystem.planets_unlocked is not None:
+        starsystem_dict.update({"planets_unlocked": starsystem.planets_unlocked})
 
     yaml_obj_to_write = yaml.dump(starsystem_dict)
 
@@ -137,7 +146,7 @@ def create_random_starsystem(source_system):
 
     linked_systems = [source_system]
 
-    starsystem = StarSystem(name=values[0], planets=values[1], alien=values[2], linked_systems=linked_systems, intro_text=get_intro_text(system_name=values[0]), events=events)
+    starsystem = StarSystem(name=values[0], planets=values[1], alien=values[2], linked_systems=linked_systems, intro_text=get_intro_text(system_name=values[0]), events=events, planets_unlocked=False)
 
     save_star_system(starsystem)
 
@@ -205,7 +214,7 @@ def load_starsystem_yaml(starsystemfilename) -> StarSystem:
 
 def create_starsystem_from_dict(starsystem_loaded):
     starsystem = StarSystem(name=starsystem_loaded["StarSystemName"], planets=starsystem_loaded["planets"], alien=starsystem_loaded["alien"], linked_systems=starsystem_loaded["linked_systems"],
-                            intro_text=starsystem_loaded["intro_text"], events=starsystem_loaded["events"])
+                            intro_text=starsystem_loaded["intro_text"], events=starsystem_loaded["events"], planets_unlocked=starsystem_loaded["planets_unlocked"] )
     return starsystem
 
 

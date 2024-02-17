@@ -4,6 +4,11 @@ import json
 import google.generativeai as genai
 from rich import print
 from rich.console import Console
+from rich.panel import Panel
+from rich.text import Text
+from rich.layout import Layout
+from constants import GOOGLE_API_KEY, CARD_TYPES, DIPLOMACY, STRENGTH, SCIENCE
+from utils import parse_user_input
 
 
 def generate_system_name():
@@ -114,6 +119,167 @@ def get_intro_text(system_name):
         intro_line = random_line(filename)
 
     return intro_line
+
+
+def get_intro_outro(system_name, intro_line):
+    if GOOGLE_API_KEY is not None:
+        genai.configure(api_key=GOOGLE_API_KEY)
+        model = genai.GenerativeModel('gemini-pro')
+
+        input = f"""
+Pretend that we are writing a tv script for a science fiction show that involves exploring the final frontier. 
+Our heroes spaceship, the USS Reliant has just entered the {system_name} system which has this description {intro_line}. 
+Write three sentences that act as the intro line to the episode. 
+Then write three sentences that act as the last few lines of episode summary told by a character at the end of the 45 min episode. 
+Give the output as a JSON with primary keys: "intro_text", "outro_text".
+        
+"""
+        response = model.generate_content(input,safety_settings={'HARM_CATEGORY_HARASSMENT': 'BLOCK_ONLY_HIGH'})
+        finaltext = response.text.replace("`", "")
+        finaltext = finaltext.replace("python", "")
+        finaltext = finaltext.replace("json", "")
+        parsed_dict = {}
+        try:
+            parsed_dict = json.loads(finaltext)
+        except:
+            parsed_dict = {}
+
+        # console = Console()
+        # console.clear()
+        # console.rule("[bold red]Encounter Text:")
+
+        intro_story_text = Text("Our story so far...\n", style="green")
+        if "intro_text" in parsed_dict.keys():
+            for text in parsed_dict["intro_text"]:
+                intro_story_text.append(" "+text)
+
+        intro_story_panel= Panel(intro_story_text, title="Intro")
+        # console.print(intro_story_panel)
+
+        outro_story_text = Text("Finally...\n", style="green")
+        if "outro_text" in parsed_dict.keys():
+            for text in parsed_dict["outro_text"]:
+                outro_story_text.append(" "+text)
+
+        outro_story_panel= Panel(outro_story_text, title="Outro")
+        # console.print(outro_story_panel)
+
+        return intro_story_panel, outro_story_panel, intro_story_text, outro_story_text
+
+
+def make_cards_from_inventory(cargo):
+
+    ## Select 3 cards at random from cargo
+
+    keys = list(cargo.keys())
+    len_keys = len(keys)
+
+    text = Text("", style="blue")
+
+    choices=[]
+
+    for i in range(0,3):
+        num = random.randint(0, len_keys-1)
+        key = keys[num]
+        choices.append(key)
+        text.append(str(i) + " " + key + " " + str(cargo[key]["power_level"]) + " " + str(cargo[key]["power_type"]) + " ")
+
+    panel = Panel(text)
+
+    return choices, panel
+
+def get_gemini_reponse(chat, input):
+    response = chat.send_message(input, stream=False,
+                                    safety_settings={'HARM_CATEGORY_HARASSMENT': 'BLOCK_ONLY_HIGH'})
+    return response
+
+
+def main_system_event(intro_text, outro_text, ship, event_type = None, event_power_level=None):
+
+    console = Console()
+    event_power_level = 5
+    event_health = 10
+    event_type = DIPLOMACY
+
+
+    if GOOGLE_API_KEY is not None:
+        genai.configure(api_key=GOOGLE_API_KEY)
+        model = genai.GenerativeModel('gemini-pro')
+        chat = model.start_chat(history=[])
+
+        initial_input = f""" Based on this science fiction intro text {intro_text} and outro text {outro_text}, 
+        begin writing a story for this star system. Only provide a couple of lines after evey one of my responses. 
+        If I respond that the ship is losing, change the story in a negative light. If I respond that the ship is winning, 
+        please change the story to be more positive. You do not need to repeat that the ship is winning or losing. 
+        If I respond that the ship is destroys or loses please finish the story accordingly.
+        Don't forget to incorporate chat history when telling this story. Make sure to keep the characters consistent throughout the story.
+        Now please begin the story.
+"""
+
+        response = get_gemini_reponse(chat, initial_input)
+        event_text = response.text
+        console.print(event_text)
+        input(">>")
+
+        while ship.health >=0 or event_power_level >=0:
+            choices, card_panel = make_cards_from_inventory(ship.cargo)
+            console.print(card_panel)
+            verb = None
+            ship_event_power = []
+            gemini_input = "Nothing to say."
+            while not isinstance(verb, int):
+                player_input = input("Your Orders, Captain? > ")
+                verb, noun, extra = parse_user_input(player_input)
+                try:
+                    verb = int(verb)
+                except:
+                    pass
+                verb = verb-1
+                if verb <0:
+                    verb = 0
+                if verb > 2:
+                    verb =2
+            chosen_card = choices[verb]
+            console.print(chosen_card)
+
+            ## Collect all of the Power Modifiers
+            ship_event_power.append(int(ship.cargo[chosen_card]["power_level"]))
+            if event_type == STRENGTH:
+                ship_event_power.append(ship.strength)  # need to determine that strength is the right one to use
+            if event_type == SCIENCE:
+                ship_event_power.append(ship.science)  # need to determine that strength is the right one to use
+            if event_type == DIPLOMACY:
+                ship_event_power.append(ship.diplomacy)  # need to determine that strength is the right one to use
+
+            final_sum = sum_dice_rolls(ship_event_power)
+            console.print(Panel(f"Dice Rolls: {ship_event_power}  Final Sum: {final_sum}"))
+
+            if comparison_dice(final_sum, event_power_level):
+                event_health = event_health - (final_sum - event_power_level)
+                console.print(Panel(f"  Event remaining: {event_health}"))
+                gemini_input = "The ship is winning."
+            else:
+                console.print(Panel(f"Face palm: Nothing happens. The {ship.name} takes some damage"))
+                ship.health = ship.health-5
+
+            if event_health <= 0:
+                console.clear()
+                console.print("ENEMY DESTROYED")
+                input(">")
+                return True
+
+            elif ship.health<=0:
+                console.clear()
+                console.print("The ship must retreat!")
+                input(">")
+                return False
+            else:
+                response = get_gemini_reponse(chat, gemini_input)
+                event_text = Panel(response.text)
+                console.print(event_text)
+
+    console.print("Default Event Successful")
+    return True
 
 def get_event_text(location, event_type, ship):
     # TODO consolidate with intro_text generation
@@ -288,6 +454,14 @@ def roll_die(num_sides):
     # simply roll the die
     return random.randint(1, num_sides)
 
+def sum_dice_rolls(all_dice):
+
+    final_sum = 0
+
+    for die in all_dice:
+        final_sum += roll_die(die)
+
+    return final_sum
 
 def comparison_dice(a, b):
     print(f"COMPARING: {a} vs {b}")
@@ -297,3 +471,11 @@ def comparison_dice(a, b):
         return False
     if a == b:
         return True
+
+def generate_generic_event():
+
+    event = {}
+    event.update({"description": "On the planet Tau Ceti, you discover a hostile alien known as the Orbsaurrians"})
+    event.update({"check":{"Combat": 12}})
+
+    return event
