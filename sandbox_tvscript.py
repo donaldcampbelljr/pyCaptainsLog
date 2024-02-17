@@ -7,6 +7,7 @@ from rich.layout import Layout
 from rich.console import Console
 
 
+
 def main():
 
     GOOGLE_API_KEY = None

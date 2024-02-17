@@ -7,7 +7,9 @@ events:
       success_number: 49
       type: combat
   system:
-    event_text: Placeholder event text
+    event_text: As the sleek starship Reliant approached Xaniaa, an uncharted planet
+      on the edge of the galaxy, anticipation filled the air. The crew, led by the
+      intrepid Captain Helena, prepared for a momentous scientific encounter.
     success_number: 42
     type: science
 file_name: xaniaa.yaml

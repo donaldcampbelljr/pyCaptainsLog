@@ -1,3 +1,11 @@
+import os
+import logging
+
+try:
+    GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+except KeyError:
+    logging.Logger.warn("NO GOOGLE API KEY!")
+    GOOGLE_API_KEY = None
 
 STAR_DIRECTORY = "starsystems"
 
@@ -26,3 +34,5 @@ ANOMALIES = [
 
 
 ]
+
+CAPTAIN_QUIPS = ["Make it so.", "Punch it.", "Engage.", "Steady as she goes."]
