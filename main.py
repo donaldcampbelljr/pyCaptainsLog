@@ -61,8 +61,12 @@ def main():
         print(Panel(adjacent_text, title="Adjacent Systems",))
 
         planet_text = Text("Nearby Planets:")
-        for i in current_system.planets:
-            planet_text.append((f"\n{i}"))
+        if current_system.planets_unlocked:
+            for i in current_system.planets:
+                planet_text.append((f"\n{i}"))
+        else:
+            planet_text.append((f"\nScan the system to unlock the planets."))
+
         print(Panel(planet_text, title="Nearby Planets:", ))
 
         print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage event[/yellow]  'status':[cyan]ship status[/cyan] 'systems':[dark_orange]visited systems[/dark_orange] 'q':[red]quit[/red]  's':[green]save[/green]")
@@ -85,7 +89,7 @@ def main():
                 print(f"Quitting. All files saved. Graph produced here: {link}")
         elif verb == 'e':
             # event logic
-            if noun in PLANET_NOUNS:
+            if noun in PLANET_NOUNS and current_system.planets_unlocked is True:
                 if extra.title() in current_system.planets:
                     console.clear()
                     # TODO this will not work if the planet name has spaces
@@ -101,6 +105,7 @@ def main():
 
                 if success:
                     print("Encounter [green]SUCCESSFUL![/green]")
+                    current_system.planets_unlocked = True
                 else:
                     print("Encounter [red]NOT SUCCESSFUL![/red]")
                 save_star_system(current_system)
