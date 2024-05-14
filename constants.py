@@ -36,3 +36,5 @@ ANOMALIES = [
 ]
 
 CAPTAIN_QUIPS = ["Make it so.", "Punch it.", "Engage.", "Steady as she goes."]
+
+LOADING_SCREENS = ["Preparing warp nacelles...", "Feeding Tribbles...", "Making some Earl Grey", "Ending holodeck programs.."]

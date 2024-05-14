@@ -7,7 +7,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 from rich.layout import Layout
-from constants import GOOGLE_API_KEY, CARD_TYPES, DIPLOMACY, STRENGTH, SCIENCE
+from constants import GOOGLE_API_KEY, CARD_TYPES, DIPLOMACY, STRENGTH, SCIENCE, LOADING_SCREENS
 from utils import parse_user_input
 
 
@@ -182,7 +182,7 @@ def make_cards_from_inventory(cargo):
         num = random.randint(0, len_keys-1)
         key = keys[num]
         choices.append(key)
-        text.append(str(i) + " " + key + " " + str(cargo[key]["power_level"]) + " " + str(cargo[key]["power_type"]) + " ")
+        text.append("| Item: " + str(i) + " " + key + " " + str(cargo[key]["power_level"]) + " lvl " + str(cargo[key]["power_type"]) + "|\n")
 
     panel = Panel(text)
 
@@ -198,8 +198,8 @@ def main_system_event(intro_text, outro_text, ship, event_type = None, event_pow
 
     console = Console()
     event_power_level = 5
-    event_health = 10
-    event_type = DIPLOMACY
+    event_health = 4
+    event_type = random.choice([DIPLOMACY, SCIENCE, STRENGTH])
 
 
     if GOOGLE_API_KEY is not None:
@@ -219,7 +219,7 @@ def main_system_event(intro_text, outro_text, ship, event_type = None, event_pow
         response = get_gemini_reponse(chat, initial_input)
         event_text = response.text
         console.print(event_text)
-        input(">>")
+        input(">> Press Enter")
 
         while ship.health >=0 or event_power_level >=0:
             choices, card_panel = make_cards_from_inventory(ship.cargo)
@@ -228,17 +228,19 @@ def main_system_event(intro_text, outro_text, ship, event_type = None, event_pow
             ship_event_power = []
             gemini_input = "Nothing to say."
             while not isinstance(verb, int):
-                player_input = input("Your Orders, Captain? > ")
+                player_input = input("Your Orders, Captain? > (Select Options 1-3)")
                 verb, noun, extra = parse_user_input(player_input)
                 try:
                     verb = int(verb)
                 except:
                     pass
-                verb = verb-1
-                if verb <0:
-                    verb = 0
-                if verb > 2:
-                    verb =2
+
+            verb = verb-1
+            if verb < 0:
+                verb = 0
+            if verb > 2:
+                verb = 2
+
             chosen_card = choices[verb]
             console.print(chosen_card)
 
@@ -274,6 +276,8 @@ def main_system_event(intro_text, outro_text, ship, event_type = None, event_pow
                 input(">")
                 return False
             else:
+                line = random.choice(LOADING_SCREENS)
+                console.rule(f"[bold purple]{line}")
                 response = get_gemini_reponse(chat, gemini_input)
                 event_text = Panel(response.text)
                 console.print(event_text)

@@ -13,7 +13,7 @@ from rich.layout import Layout
 from utils import parse_user_input
 
 
-from constants import PLANET_NOUNS, LEAVE_COMMANDS, GET_COMMANDS, CAPTAIN_QUIPS
+from constants import PLANET_NOUNS, LEAVE_COMMANDS, GET_COMMANDS, CAPTAIN_QUIPS, LOADING_SCREENS
 from ship  import build_cargo_table, build_status_table
 import random
 
@@ -276,7 +276,8 @@ def resolve_system_event(current_system: StarSystem, ship: Ship):
     console.clear()
     console.print(intro_panel)
     input("Press Enter to Continue: ")
-
+    line = random.choice(LOADING_SCREENS)
+    console.rule(f"[bold purple]{line}")
     success = main_system_event(intro_story_text, outro_story_text, ship)
 
     console.print(outro_panel)
