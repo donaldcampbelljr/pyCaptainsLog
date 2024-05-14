@@ -21,3 +21,4 @@ linked_systems:
 planets:
 - Earth
 - Mars
+planets_unlocked: true
