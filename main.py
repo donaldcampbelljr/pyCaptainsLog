@@ -13,7 +13,8 @@ from rich.layout import Layout
 from utils import parse_user_input
 
 
-from constants import PLANET_NOUNS, LEAVE_COMMANDS, GET_COMMANDS, CAPTAIN_QUIPS, LOADING_SCREENS
+from constants import PLANET_NOUNS, LEAVE_COMMANDS, GET_COMMANDS, CAPTAIN_QUIPS, LOADING_SCREENS, DIPLOMACY, SCIENCE, \
+    STRENGTH
 from ship  import build_cargo_table, build_status_table
 import random
 
@@ -69,7 +70,7 @@ def main():
 
         print(Panel(planet_text, title="Nearby Planets:", ))
 
-        print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage event[/yellow]  'status':[cyan]ship status[/cyan] 'systems':[dark_orange]visited systems[/dark_orange] 'q':[red]quit[/red]  's':[green]save[/green]")
+        print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage system event[/yellow]  'e p planet_name':[blue]engage planet event[/blue] 'status':[cyan]ship status[/cyan] 'systems':[dark_orange]visited systems[/dark_orange] 'q':[red]quit[/red]  's':[green]save[/green]")
 
         next_system = None
 
@@ -231,14 +232,16 @@ def resolve_planet_event(current_system: StarSystem, player_ship: Ship, planet_n
                         if "lcname" in item:
                             if noun in item["lcname"]:
                                 print(f"GET SUCCESSFUL: {item['name']}")
+                                input("Press Enter...")
                                 found = True
+                                # {"Quantum Torpedos":{"desc":"Powerful torpedos", "power_level": 2, "power_type": STRENGTH}}
                                 if "description" in item:
-                                    desc= item['description']
+                                    desc = item['description']
                                 elif "function" in item:
                                     desc = item['function']
                                 else:
                                     desc = "Unknown function"
-                                player_ship.cargo.update({item['name']:desc})
+                                player_ship.cargo.update({item['name']:{"desc":desc, "power_level":random.randint(1,3) ,"power_type": random.choice([DIPLOMACY, SCIENCE, STRENGTH])}})
                 if not found:
                     print(f"Scanners do not show, {noun}, in orbit.")
 
