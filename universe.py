@@ -9,7 +9,7 @@ from starsystem import load_starsystem_yaml
 def universe_save():
     list_systems = []
     path_starsystems = os.path.abspath(STAR_DIRECTORY)
-    for (dirpath, dirnames, filenames) in walk(path_starsystems):
+    for dirpath, dirnames, filenames in walk(path_starsystems):
         print("Collecting filenames")
         for file in filenames:
             system = load_starsystem_yaml(file)
@@ -18,16 +18,17 @@ def universe_save():
     # Convert list of dicts to a dataframe
     system_df = pd.DataFrame(list_systems)
 
-    link = os.path.abspath(STAR_DIRECTORY)+"universe.csv"
-    #save to the star directory
+    link = os.path.abspath(STAR_DIRECTORY) + "universe.csv"
+    # save to the star directory
     system_df.to_csv(link, index=True)
 
     return link
 
+
 def build_universe_table():
     list_systems = []
     path_starsystems = os.path.abspath(STAR_DIRECTORY)
-    for (dirpath, dirnames, filenames) in walk(path_starsystems):
+    for dirpath, dirnames, filenames in walk(path_starsystems):
         print("Collecting filenames")
         for file in filenames:
             system = load_starsystem_yaml(file)
@@ -44,7 +45,7 @@ def build_universe_table():
 
     # Add rows from the DataFrame
     for index, row in system_df.iterrows():
-        row = row.str.split(', ', expand=True)
+        row = row.str.split(", ", expand=True)
         table.add_row(str(row))  # Unpack row values as arguments
 
     return table

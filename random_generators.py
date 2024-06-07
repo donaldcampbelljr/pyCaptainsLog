@@ -7,27 +7,91 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 from rich.layout import Layout
-from constants import GOOGLE_API_KEY, CARD_TYPES, DIPLOMACY, STRENGTH, SCIENCE, LOADING_SCREENS
+from constants import (
+    GOOGLE_API_KEY,
+    CARD_TYPES,
+    DIPLOMACY,
+    STRENGTH,
+    SCIENCE,
+    LOADING_SCREENS,
+)
 from utils import parse_user_input
 
 
 def generate_system_name():
-    first_syllables = ["Exo", "Aeth", "Xan", "Sol", "Terra", "Bel", "Mar", "Jov", "Neb", "Kep"]
-    second_syllables = ["on", "ar", "eth", "ia", "us", "a", " Prime", " Major", " Minor", " Beta"]
-    third_syllables = ["is", "os", "a", "or", "on", "ia", " Prime", " Major", " Minor", " Beta"]
+    first_syllables = [
+        "Exo",
+        "Aeth",
+        "Xan",
+        "Sol",
+        "Terra",
+        "Bel",
+        "Mar",
+        "Jov",
+        "Neb",
+        "Kep",
+    ]
+    second_syllables = [
+        "on",
+        "ar",
+        "eth",
+        "ia",
+        "us",
+        "a",
+        " Prime",
+        " Major",
+        " Minor",
+        " Beta",
+    ]
+    third_syllables = [
+        "is",
+        "os",
+        "a",
+        "or",
+        "on",
+        "ia",
+        " Prime",
+        " Major",
+        " Minor",
+        " Beta",
+    ]
     first = random.choice(first_syllables)
     second = random.choice(second_syllables)
     third = random.choice(third_syllables)
     return f"{first}{second}{third}"
 
+
 def generate_alien_name():
-    first_syllables = ["Zyl", "Xheth", "Yth", "Qel", "Vry", "T'eyl", "Khel", "Aethel", "Xylos", "Zyron"]
-    second_syllables = ["an", "ar", "en", "in", "ai", "ora", "ryn", "thal", "kar", "nar"]
+    first_syllables = [
+        "Zyl",
+        "Xheth",
+        "Yth",
+        "Qel",
+        "Vry",
+        "T'eyl",
+        "Khel",
+        "Aethel",
+        "Xylos",
+        "Zyron",
+    ]
+    second_syllables = [
+        "an",
+        "ar",
+        "en",
+        "in",
+        "ai",
+        "ora",
+        "ryn",
+        "thal",
+        "kar",
+        "nar",
+    ]
     third_syllables = ["'ai", "ath", "na", "on", "ya", "ee", "is", "kar", "van", "yr"]
     first = random.choice(first_syllables)
     second = random.choice(second_syllables)
     third = random.choice(third_syllables)
     return f"{first}{second}{third}"
+
 
 def generate_planets_list():
     list_of_planets = []
@@ -35,6 +99,7 @@ def generate_planets_list():
         system_name = generate_system_name()
         list_of_planets.append(system_name)
     return list_of_planets
+
 
 def generate_planet_information(planet_name: str):
     """
@@ -45,7 +110,7 @@ def generate_planet_information(planet_name: str):
     console.clear()
     GOOGLE_API_KEY = None
     try:
-        GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+        GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
     except KeyError:
         print("None")
 
@@ -53,7 +118,7 @@ def generate_planet_information(planet_name: str):
         console.print("[yellow3]ENTERING PLANETARY ORBIT....")
         genai.configure(api_key=GOOGLE_API_KEY)
 
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel("gemini-pro")
 
         input = f"""
                 Generate 1 unique planet for a tabletop rpg with the name {planet_name}. Answer in JSON format with primary keys: name, description, planet_type, items. For items, only generate a max of 3 items. Make sure the theme is science fiction.
@@ -85,6 +150,7 @@ def generate_planet_information(planet_name: str):
 
     return parsed_dict
 
+
 def get_intro_text(system_name):
 
     # First see if the Google API Key is available, else, generate some random text
@@ -92,7 +158,7 @@ def get_intro_text(system_name):
     console.clear()
     GOOGLE_API_KEY = None
     try:
-        GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+        GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
     except KeyError:
         print("None")
 
@@ -100,16 +166,18 @@ def get_intro_text(system_name):
         console.print("[yellow3]JUMPING INTO THE UNKNOWN....")
         genai.configure(api_key=GOOGLE_API_KEY)
 
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel("gemini-pro")
 
-        response = model.generate_content(f"Write a brief description about the fictional {system_name} star system. Keep it to two lines of text."
-                                          )
+        response = model.generate_content(
+            f"Write a brief description about the fictional {system_name} star system. Keep it to two lines of text."
+        )
 
         intro_line = response.text
     else:
+
         def random_line(filename):
             """Reads a random line from a text file."""
-            with open(filename, 'r') as file:
+            with open(filename, "r") as file:
                 lines = file.readlines()
                 random_line = random.choice(lines)
                 return random_line.strip()
@@ -124,7 +192,7 @@ def get_intro_text(system_name):
 def get_intro_outro(system_name, intro_line):
     if GOOGLE_API_KEY is not None:
         genai.configure(api_key=GOOGLE_API_KEY)
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel("gemini-pro")
 
         input = f"""
 Pretend that we are writing a tv script for a science fiction show that involves exploring the final frontier. 
@@ -134,7 +202,9 @@ Then write three sentences that act as the last few lines of episode summary tol
 Give the output as a JSON with primary keys: "intro_text", "outro_text".
         
 """
-        response = model.generate_content(input,safety_settings={'HARM_CATEGORY_HARASSMENT': 'BLOCK_ONLY_HIGH'})
+        response = model.generate_content(
+            input, safety_settings={"HARM_CATEGORY_HARASSMENT": "BLOCK_ONLY_HIGH"}
+        )
         finaltext = response.text.replace("`", "")
         finaltext = finaltext.replace("python", "")
         finaltext = finaltext.replace("json", "")
@@ -151,17 +221,17 @@ Give the output as a JSON with primary keys: "intro_text", "outro_text".
         intro_story_text = Text("Our story so far...\n", style="green")
         if "intro_text" in parsed_dict.keys():
             for text in parsed_dict["intro_text"]:
-                intro_story_text.append(" "+text)
+                intro_story_text.append(" " + text)
 
-        intro_story_panel= Panel(intro_story_text, title="Intro")
+        intro_story_panel = Panel(intro_story_text, title="Intro")
         # console.print(intro_story_panel)
 
         outro_story_text = Text("Finally...\n", style="green")
         if "outro_text" in parsed_dict.keys():
             for text in parsed_dict["outro_text"]:
-                outro_story_text.append(" "+text)
+                outro_story_text.append(" " + text)
 
-        outro_story_panel= Panel(outro_story_text, title="Outro")
+        outro_story_panel = Panel(outro_story_text, title="Outro")
         # console.print(outro_story_panel)
 
         return intro_story_panel, outro_story_panel, intro_story_text, outro_story_text
@@ -176,35 +246,50 @@ def make_cards_from_inventory(cargo):
 
     text = Text("", style="blue")
 
-    choices=[]
+    choices = []
 
-    for i in range(0,3):
-        num = random.randint(0, len_keys-1)
+    for i in range(0, 3):
+        num = random.randint(0, len_keys - 1)
         key = keys[num]
         choices.append(key)
-        text.append("| Item: " + str(i) + " " + key + " " + str(cargo[key]["power_level"]) + " lvl " + str(cargo[key]["power_type"]) + "|\n")
+        text.append(
+            "| Item: "
+            + str(i)
+            + " "
+            + key
+            + " "
+            + str(cargo[key]["power_level"])
+            + " lvl "
+            + str(cargo[key]["power_type"])
+            + "|\n"
+        )
 
     panel = Panel(text)
 
     return choices, panel
 
+
 def get_gemini_reponse(chat, input):
-    response = chat.send_message(input, stream=False,
-                                    safety_settings={'HARM_CATEGORY_HARASSMENT': 'BLOCK_ONLY_HIGH'})
+    response = chat.send_message(
+        input,
+        stream=False,
+        safety_settings={"HARM_CATEGORY_HARASSMENT": "BLOCK_ONLY_HIGH"},
+    )
     return response
 
 
-def main_system_event(intro_text, outro_text, ship, event_type = None, event_power_level=None):
+def main_system_event(
+    intro_text, outro_text, ship, event_type=None, event_power_level=None
+):
 
     console = Console()
     event_power_level = 5
     event_health = 4
     event_type = random.choice([DIPLOMACY, SCIENCE, STRENGTH])
 
-
     if GOOGLE_API_KEY is not None:
         genai.configure(api_key=GOOGLE_API_KEY)
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel("gemini-pro")
         chat = model.start_chat(history=[])
 
         initial_input = f""" Based on this science fiction intro text {intro_text} and outro text {outro_text}, 
@@ -221,7 +306,7 @@ def main_system_event(intro_text, outro_text, ship, event_type = None, event_pow
         console.print(event_text)
         input(">> Press Enter")
 
-        while ship.health >=0 or event_power_level >=0:
+        while ship.health >= 0 or event_power_level >= 0:
             choices, card_panel = make_cards_from_inventory(ship.cargo)
             console.print(card_panel)
             verb = None
@@ -235,7 +320,7 @@ def main_system_event(intro_text, outro_text, ship, event_type = None, event_pow
                 except:
                     pass
 
-            verb = verb-1
+            verb = verb - 1
             if verb < 0:
                 verb = 0
             if verb > 2:
@@ -247,22 +332,34 @@ def main_system_event(intro_text, outro_text, ship, event_type = None, event_pow
             ## Collect all of the Power Modifiers
             ship_event_power.append(int(ship.cargo[chosen_card]["power_level"]))
             if event_type == STRENGTH:
-                ship_event_power.append(ship.strength)  # need to determine that strength is the right one to use
+                ship_event_power.append(
+                    ship.strength
+                )  # need to determine that strength is the right one to use
             if event_type == SCIENCE:
-                ship_event_power.append(ship.science)  # need to determine that strength is the right one to use
+                ship_event_power.append(
+                    ship.science
+                )  # need to determine that strength is the right one to use
             if event_type == DIPLOMACY:
-                ship_event_power.append(ship.diplomacy)  # need to determine that strength is the right one to use
+                ship_event_power.append(
+                    ship.diplomacy
+                )  # need to determine that strength is the right one to use
 
             final_sum = sum_dice_rolls(ship_event_power)
-            console.print(Panel(f"Dice Rolls: {ship_event_power}  Final Sum: {final_sum}"))
+            console.print(
+                Panel(f"Dice Rolls: {ship_event_power}  Final Sum: {final_sum}")
+            )
 
             if comparison_dice(final_sum, event_power_level):
                 event_health = event_health - (final_sum - event_power_level)
                 console.print(Panel(f"  Event remaining: {event_health}"))
                 gemini_input = "The ship is winning."
             else:
-                console.print(Panel(f"Face palm: Nothing happens. The {ship.name} takes some damage"))
-                ship.health = ship.health-5
+                console.print(
+                    Panel(
+                        f"Face palm: Nothing happens. The {ship.name} takes some damage"
+                    )
+                )
+                ship.health = ship.health - 5
 
             if event_health <= 0:
                 console.clear()
@@ -270,7 +367,7 @@ def main_system_event(intro_text, outro_text, ship, event_type = None, event_pow
                 input(">")
                 return True
 
-            elif ship.health<=0:
+            elif ship.health <= 0:
                 console.clear()
                 console.print("The ship must retreat!")
                 input(">")
@@ -285,6 +382,7 @@ def main_system_event(intro_text, outro_text, ship, event_type = None, event_pow
     console.print("Default Event Successful")
     return True
 
+
 def get_event_text(location, event_type, ship):
     # TODO consolidate with intro_text generation
     # First see if the Google API Key is available, else, generate some random text
@@ -294,7 +392,7 @@ def get_event_text(location, event_type, ship):
 
     GOOGLE_API_KEY = None
     try:
-        GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+        GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
     except KeyError:
         print("None")
 
@@ -302,12 +400,12 @@ def get_event_text(location, event_type, ship):
         print("ENGAGING EVENT....\n")
         genai.configure(api_key=GOOGLE_API_KEY)
 
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel("gemini-pro")
 
         response = model.generate_content(
             f"Write a brief intro about this fictional, science fiction encounter where our starship, the {ship.name} "
             f"engages in a {event_type} encounter at the location: {location}. Keep it to two lines of text."
-            )
+        )
 
         event_text = response.text
 
@@ -318,36 +416,37 @@ def get_event_text(location, event_type, ship):
 
 
 def check_destroyed(event_text):
-    if 'destroyed' in event_text:
+    if "destroyed" in event_text:
         return True
-    elif 'Destroyed' in event_text:
+    elif "Destroyed" in event_text:
         return True
     else:
         return False
+
 
 def chat_event(initial_input):
     console = Console()
 
     GOOGLE_API_KEY = None
     try:
-        GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+        GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
     except KeyError:
         print("No GOOGLE_API_KEY SET!")
 
     if GOOGLE_API_KEY is not None:
-        def get_gemini_reponse(input):
-            response = chat.send_message(input,stream=False)
-            return response
 
+        def get_gemini_reponse(input):
+            response = chat.send_message(input, stream=False)
+            return response
 
         genai.configure(api_key=GOOGLE_API_KEY)
 
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel("gemini-pro")
         chat = model.start_chat(history=[])
 
         console.rule("[bold red]Loading Conversation:")
         response = get_gemini_reponse(initial_input)
-        #console.print(f"[green]Initial response {response.text}")
+        # console.print(f"[green]Initial response {response.text}")
 
         player_input = None
 
@@ -355,7 +454,7 @@ def chat_event(initial_input):
         console.print(f"[green]{event_text}")
 
         console.print("[blue]How to proceed?")
-        while player_input != 'quit':
+        while player_input != "quit":
             player_input = input("> ")
             response = get_gemini_reponse(player_input)
             event_text = response.text
@@ -368,23 +467,27 @@ def chat_event(initial_input):
 
     return final_response
 
+
 def combat_chat_event(initial_input, ship, enemy_health):
     console = Console()
 
     GOOGLE_API_KEY = None
     try:
-        GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+        GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
     except KeyError:
         print("No GOOGLE_API_KEY SET!")
 
     if GOOGLE_API_KEY is not None:
+
         def get_gemini_reponse(input):
-            #response = chat.send_message(input,stream=False, safety_settings={'HARM_CATEGORY_HARASSMENT':'block_none'})
+            # response = chat.send_message(input,stream=False, safety_settings={'HARM_CATEGORY_HARASSMENT':'block_none'})
 
             ## this allows us to have combat without tripping the safety mechanism,e.g. "Fire all phasers!" would sometimes trigger it.
-            response = chat.send_message(input, stream=False,
-                                         safety_settings={'HARM_CATEGORY_HARASSMENT': 'BLOCK_ONLY_HIGH'})
-
+            response = chat.send_message(
+                input,
+                stream=False,
+                safety_settings={"HARM_CATEGORY_HARASSMENT": "BLOCK_ONLY_HIGH"},
+            )
 
             return response
 
@@ -400,25 +503,22 @@ def combat_chat_event(initial_input, ship, enemy_health):
             else:
                 damage = 0
 
-            if 'your' or 'Your' in text:
+            if "your" or "Your" in text:
                 # Get number and subtract from player ship
                 ship.health = ship.health - damage
 
-            if 'miss' or 'Miss' or 'missed' in text:
+            if "miss" or "Miss" or "missed" in text:
                 # don't do anything
                 pass
 
-            if 'my' or 'My' or 'I' in text:
+            if "my" or "My" or "I" in text:
                 # get number and subtract from enemy ship
                 enemy_health = enemy_health - damage
 
             return enemy_health
 
-
-
-
         genai.configure(api_key=GOOGLE_API_KEY)
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel("gemini-pro")
         chat = model.start_chat(history=[])
 
         response = get_gemini_reponse(initial_input)
@@ -431,10 +531,16 @@ def combat_chat_event(initial_input, ship, enemy_health):
         enemy_health = calculate_damage(ship, enemy_health, response.text)
 
         console.print("[blue]How to proceed?")
-        while player_input != 'quit':
-            console.print(f"[dark_red]Enemy: {enemy_health}[/dark_red]  [sea_green2]Ship: {ship.health}[/sea_green2]")
+        while player_input != "quit":
+            console.print(
+                f"[dark_red]Enemy: {enemy_health}[/dark_red]  [sea_green2]Ship: {ship.health}[/sea_green2]"
+            )
             player_input = input("> ")
-            response = get_gemini_reponse(f"Your ship's health is now: {enemy_health} My ship's health is now: {ship.health} " + player_input + "If I am attacking in my previous sentence, how much damage do you take and do you counter attack? If you decide to counterattack, how much damage does my ship take?")
+            response = get_gemini_reponse(
+                f"Your ship's health is now: {enemy_health} My ship's health is now: {ship.health} "
+                + player_input
+                + "If I am attacking in my previous sentence, how much damage do you take and do you counter attack? If you decide to counterattack, how much damage does my ship take?"
+            )
             event_text = response.text
             console.print(f"[green]{event_text}")
             enemy_health = calculate_damage(ship, enemy_health, response.text)
@@ -454,9 +560,11 @@ def combat_chat_event(initial_input, ship, enemy_health):
 
     return final_response
 
+
 def roll_die(num_sides):
     # simply roll the die
     return random.randint(1, num_sides)
+
 
 def sum_dice_rolls(all_dice):
 
@@ -467,6 +575,7 @@ def sum_dice_rolls(all_dice):
 
     return final_sum
 
+
 def comparison_dice(a, b):
     print(f"COMPARING: {a} vs {b}")
     if a > b:
@@ -476,10 +585,15 @@ def comparison_dice(a, b):
     if a == b:
         return True
 
+
 def generate_generic_event():
 
     event = {}
-    event.update({"description": "On the planet Tau Ceti, you discover a hostile alien known as the Orbsaurrians"})
-    event.update({"check":{"Combat": 12}})
+    event.update(
+        {
+            "description": "On the planet Tau Ceti, you discover a hostile alien known as the Orbsaurrians"
+        }
+    )
+    event.update({"check": {"Combat": 12}})
 
     return event

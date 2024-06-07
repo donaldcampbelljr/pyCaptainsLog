@@ -1,4 +1,3 @@
-
 def parse_user_input(input):
     # simple verb noun identifier
     # e.g. explore planet planet a
@@ -18,8 +17,8 @@ def parse_user_input(input):
 
     try:
         extra = user_input[2:]
-        if len(extra)>1:
-            extra = ' '.join(extra) # if the name the user gives is 2 or more words...
+        if len(extra) > 1:
+            extra = " ".join(extra)  # if the name the user gives is 2 or more words...
         #     extra.lower() # lowercase so that all proper names have no spaces and
         elif len(extra) == 1:
             extra = extra[0].lower()
