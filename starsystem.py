@@ -47,7 +47,7 @@ class StarSystem:
         return f"Starsystem {self.name}"
 
 
-def save_star_system(starsystem):
+def save_star_system(starsystem, path):
     # I thought it would be nice to have all star systems in one big yaml.
     # But maybe it is best to have them segregated such that the info is easier to read.
 
@@ -73,7 +73,7 @@ def save_star_system(starsystem):
 
     yaml_obj_to_write = yaml.dump(starsystem_dict)
 
-    path_starsystems = os.path.abspath(STAR_DIRECTORY)
+    path_starsystems = os.path.abspath(path)
     # This is incorrect syntax for appending filename to path as a file in the directory: os.path.join(path_starsystems + file_name)
     file_name = starsystem.file_name
 

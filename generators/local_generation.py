@@ -1,19 +1,79 @@
 import random
 import os
+
+from random_generators import get_intro_text
 from resources.systems import star_system_descriptions
+from starsystem import load_random_values, create_events, StarSystem, save_star_system
+from planet import Planet
+from event import Event
 
 
 def generate_systems(web, game_path):
 
-    #For each system name in the web, generate a system
+    # For each system name in the web, generate a system
 
-    #Then save each system to disk
+    # Then save each system to disk
 
     # Finally save the "map"/web to disk as well.
+    print(f" Here is the input parameters: {web} \n {game_path}")
 
-
+    for name in list(web.keys()):
+        starsystem = create_random_starsystem(name, linked_systems=web[name])
+        save_star_system(starsystem, game_path)
 
     pass
+
+
+def generate_intro_text_local():
+    pass
+
+
+def generate_planets_local():
+    pass
+
+
+def generate_events_local():
+    pass
+
+
+def generate_starsystem_content():
+
+    intro_text = generate_intro_text_local()
+    planets = generate_planets_local()
+    events = generate_events_local()
+
+    return (
+        intro_text,
+        planets,
+        events,
+    )
+
+
+def create_random_starsystem(name, linked_systems):
+
+    intro_text, planets, events = generate_starsystem_content()
+
+    # values = load_random_values()
+    #
+    # events = create_events(name=values[0], planets=values[1], alien=values[2])
+
+    # linked_systems = [source_system]
+
+    starsystem = StarSystem(
+        name=name,
+        planets=planets,
+        alien=None,
+        linked_systems=linked_systems,
+        intro_text=intro_text,
+        events=events,
+        planets_unlocked=False,
+    )
+
+    # save_star_system(starsystem)
+
+    print(f"HERE IS A STAR SYSTEM {starsystem}")
+
+    return starsystem
 
 
 def build_universes_locally():
@@ -34,7 +94,6 @@ def build_universes_locally():
     web = create_web(names)
 
     generate_systems(web, game_path)
-
 
     return True
 
@@ -59,8 +118,8 @@ def create_web(names):
         random_name = random.choice(names)
         if random_name not in web[start]:
             web[start][random_name] = {}
-            web[random_name] = {start:{}}
-            web[random_name] = {end:{}}
+            web[random_name] = {start: {}}
+            web[random_name] = {end: {}}
 
     print(web)
     print(list(web.keys()))
