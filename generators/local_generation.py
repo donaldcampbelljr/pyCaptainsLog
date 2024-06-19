@@ -138,7 +138,7 @@ def make_directory():
     )
 
     try:
-        os.mkdir(generated_path)
+        os.makedirs(generated_path, exist_ok=True)
     except OSError as error:
         print(f"Error creating directory: {error} Does it already exist?")
 
