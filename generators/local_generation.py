@@ -1,8 +1,11 @@
 import random
 import os
 
-from random_generators import get_intro_text
+from constants import DIPLOMACY, STRENGTH, SCIENCE
+from random_generators import get_intro_text, generate_system_name
+from resources.planets import planet_descriptions
 from resources.systems import star_system_descriptions
+from resources.events import events_descriptions
 from starsystem import load_random_values, create_events, StarSystem, save_star_system
 from planet import Planet
 from event import Event
@@ -28,23 +31,58 @@ def generate_systems(web, game_path, start):
     return starting_system
 
 
-def generate_intro_text_local():
-    pass
+def generate_intro_text_local(name):
+
+    if name in star_system_descriptions:
+        return star_system_descriptions[name]
+    elif name in events_descriptions:
+        return events_descriptions[name]
+    else:
+        return "PLACE HOLDER INTRO TEXT"
 
 
-def generate_planets_local():
-    pass
+
+def generate_planets_local(name):
 
 
-def generate_events_local():
-    pass
+    choice = random.randint(0, 1)
+    list_of_planets = []
+
+    if choice == 0:
+        for i in range(random.randint(1, 5)):
+            system_name = generate_system_name()
+            list_of_planets.append(system_name)
+    else:
+        for i in range(random.randint(1, 5)):
+            planet_name = name + " " + str(i)
+            list_of_planets.append(planet_name)
+
+    planet_collection = []
+    for name in list_of_planets:
+        new_planet = Planet(name=name, alien=None,intro_text=random.choice(planet_descriptions), events=None)
+        planet_collection.append(new_planet)
+
+    return planet_collection
 
 
-def generate_starsystem_content():
+def generate_events_local(number_of_events=2):
 
-    intro_text = generate_intro_text_local()
-    planets = generate_planets_local()
-    events = generate_events_local()
+
+    events_collection = []
+
+    for i in range(random.randint(1, number_of_events)):
+        name = random.choice(list(events_descriptions.keys()))
+        new_event = Event(id=create_unique_hash(), name=name, type=random.choice([DIPLOMACY, STRENGTH, SCIENCE]), intro_text=generate_intro_text_local(name))
+        events_collection.append(new_event)
+
+    return events_collection
+
+
+def generate_starsystem_content(name):
+
+    intro_text = generate_intro_text_local(name)
+    planets = generate_planets_local(name)
+    events = generate_events_local(number_of_events=3)
 
     return (
         intro_text,
@@ -55,7 +93,7 @@ def generate_starsystem_content():
 
 def create_random_starsystem(name, linked_systems):
 
-    intro_text, planets, events = generate_starsystem_content()
+    intro_text, planets, events = generate_starsystem_content(name)
 
     # values = load_random_values()
     #

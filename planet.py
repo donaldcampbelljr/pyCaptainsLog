@@ -21,13 +21,12 @@ class Planet:
     """
 
     def __init__(
-        self, name, planets, alien, intro_text, events, planets_unlocked
+        self, name, alien, intro_text, events,
     ) -> None:
 
         # Load Model, feed it inputs and then generate items.
 
         self.name = name
-        self.planets = planets
         self.alien = alien
         self.intro_text = intro_text
         name = name.replace(" ", "")

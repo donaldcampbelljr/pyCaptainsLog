@@ -23,8 +23,6 @@ class Event:
 
     def __init__(self, id, name, type, intro_text) -> None:
 
-        # Load Model, feed it inputs and then generate items.
-
         self.id = id
         self.name = name
         self.type = type
