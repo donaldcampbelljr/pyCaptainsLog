@@ -8,7 +8,7 @@ from planet import Planet
 from event import Event
 
 
-def generate_systems(web, game_path):
+def generate_systems(web, game_path, start):
 
     # For each system name in the web, generate a system
 
@@ -17,11 +17,15 @@ def generate_systems(web, game_path):
     # Finally save the "map"/web to disk as well.
     print(f" Here is the input parameters: {web} \n {game_path}")
 
+    starting_system = None
+
     for name in list(web.keys()):
         starsystem = create_random_starsystem(name, linked_systems=web[name])
+        if name == start:
+            starting_system = starsystem
         save_star_system(starsystem, game_path)
 
-    pass
+    return starting_system
 
 
 def generate_intro_text_local():
@@ -80,6 +84,8 @@ def build_universes_locally():
     """
     Builds the game universe without using any GPT APIs
 
+    returns a single name, the starting system
+
     """
 
     game_path = make_directory()
@@ -91,11 +97,11 @@ def build_universes_locally():
     # connect them as edges to create web for player to traverse
 
     # For now, make simple closed graph with a start, an end, and 2 systems connected in between
-    web = create_web(names)
+    web, start_system_name, end_system_name = create_web(names)
 
-    generate_systems(web, game_path)
+    starting_system = generate_systems(web, game_path, start_system_name)
 
-    return True
+    return starting_system
 
 
 def create_web(names):
@@ -124,7 +130,7 @@ def create_web(names):
     print(web)
     print(list(web.keys()))
 
-    return web
+    return web, start, end
 
 
 def make_directory():

@@ -48,70 +48,70 @@ def main():
     console = Console()
 
     console.print("Hello World")
-    build_universes_locally()
+    starting_system = build_universes_locally()
 
     #
     # # Initialize Game
-    # starting_location = load_starsystem_yaml("sol.yaml")
+    # starting_location = load_starsystem_yaml(starting_system_name+".yaml")
     # starting_location = create_starsystem_from_dict(starting_location)
+    # #
+    current_system = starting_system
     #
-    # current_system = starting_location
+    player_ship = Ship(name="Reliant", location=current_system)
     #
-    # player_ship = Ship(name="Reliant", location=current_system)
-    #
-    # console.clear()
-    #
-    #
-    #
-    #
-    # while playing:
-    #     console.rule(f"\n[dark_goldenrod]{current_system.name}[/dark_goldenrod]")
-    #
-    #     print(Panel(current_system.intro_text,))
-    #
-    #     if player_ship.health < 0:
-    #         console.clear()
-    #         console.print("[bold red] SHIP DESTROYED")
-    #         console.print("[bold red] Game Over")
-    #         break
-    #
-    #     player_ship.location = current_system
-    #     print("\nWhere would you like to jump?")
-    #     count = 0
-    #
-    #
-    #     adjacent_text = Text("Adjacent Systems")
-    #     for i in current_system.linked_systems:
-    #         count += 1
-    #         adjacent_text.append(f"\n{count}  {i}  ")
-    #
-    #     count +=1
-    #     adjacent_text.append(f"\n{count}  {'Unexplored'}  ")
-    #     print(Panel(adjacent_text, title="Adjacent Systems",))
-    #
-    #     planet_text = Text("Nearby Planets:")
-    #     if current_system.planets_unlocked:
-    #         for i in current_system.planets:
-    #             planet_text.append((f"\n{i}"))
-    #     else:
-    #         planet_text.append((f"\nScan the system to unlock the planets."))
-    #
-    #     print(Panel(planet_text, title="Nearby Planets:", ))
-    #
-    #     print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage system event[/yellow]  'e p planet_name':[blue]engage planet event[/blue] 'status':[cyan]ship status[/cyan] 'systems':[dark_orange]visited systems[/dark_orange] 'q':[red]quit[/red]  's':[green]save[/green]")
-    #
-    #     next_system = None
-    #
-    #     next_system = input("Enter System: ")
+    console.clear()
     #
     #
     #
-    #     verb, noun, extra = parse_user_input(next_system)
     #
-    #
-    #
-    #     if verb == 'q':
-    #         playing = False
+    while playing:
+        console.rule(f"\n[dark_goldenrod]{current_system.name}[/dark_goldenrod]")
+
+        #print(Panel(current_system.intro_text,))
+
+        if player_ship.health < 0:
+            console.clear()
+            console.print("[bold red] SHIP DESTROYED")
+            console.print("[bold red] Game Over")
+            break
+
+        player_ship.location = current_system
+        print("\nWhere would you like to jump?")
+        count = 0
+
+
+        adjacent_text = Text("Adjacent Systems")
+        for i in current_system.linked_systems:
+            count += 1
+            adjacent_text.append(f"\n{count}  {i}  ")
+
+        count +=1
+        adjacent_text.append(f"\n{count}  {'Unexplored'}  ")
+        print(Panel(adjacent_text, title="Adjacent Systems",))
+
+        planet_text = Text("Nearby Planets:")
+        if current_system.planets_unlocked:
+            for i in current_system.planets:
+                planet_text.append((f"\n{i}"))
+        else:
+            planet_text.append((f"\nScan the system to unlock the planets."))
+
+        print(Panel(planet_text, title="Nearby Planets:", ))
+
+        print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage system event[/yellow]  'e p planet_name':[blue]engage planet event[/blue] 'status':[cyan]ship status[/cyan] 'systems':[dark_orange]visited systems[/dark_orange] 'q':[red]quit[/red]  's':[green]save[/green]")
+
+        next_system = None
+
+        next_system = input("Enter System: ")
+
+
+
+        verb, noun, extra = parse_user_input(next_system)
+
+
+
+        if verb == 'q':
+            playing = False
     #     elif verb == 's':
     #             playing = False
     #             link = universe_save()
