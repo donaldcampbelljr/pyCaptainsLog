@@ -17,3 +17,6 @@ __pycache__/universe.cpython-310.pyc
 .env
 __pycache__/utils.cpython-310.pyc
 /generated_game/
+__pycache__/*
+/generators/__pycache__
+/resources/__pycache__
