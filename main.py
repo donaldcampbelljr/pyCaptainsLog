@@ -48,7 +48,7 @@ def main():
     console = Console()
 
     console.print("Hello World")
-    starting_system = build_universes_locally()
+    starting_system, game_path = build_universes_locally()
 
     #
     # # Initialize Game
@@ -98,9 +98,14 @@ def main():
 
         print(Panel(planet_text, title="Nearby Planets:", ))
 
-        print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage system event[/yellow]  'e p planet_name':[blue]engage planet event[/blue] 'status':[cyan]ship status[/cyan] 'systems':[dark_orange]visited systems[/dark_orange] 'q':[red]quit[/red]  's':[green]save[/green]")
+        #print(f"'#':[purple]jump to system[/purple]  'e':[yellow]engage system event[/yellow]  'e p planet_name':[blue]engage planet event[/blue] 'status':[cyan]ship status[/cyan] 'systems':[dark_orange]visited systems[/dark_orange] 'q':[red]quit[/red]  's':[green]save[/green]")
+
+        print(
+            f"'#':[purple]jump to system[/purple] 'e':[yellow]engage system event[/yellow] 'q':[red]quit[/red]")
 
         next_system = None
+
+        possible_linked_systems = list(current_system.linked_systems.keys())
 
         next_system = input("Enter System: ")
 
@@ -112,57 +117,59 @@ def main():
 
         if verb == 'q':
             playing = False
-    #     elif verb == 's':
-    #             playing = False
-    #             link = universe_save()
-    #             print(f"Quitting. All files saved. Graph produced here: {link}")
-    #     elif verb == 'e':
-    #         # event logic
-    #         if noun in PLANET_NOUNS and current_system.planets_unlocked is True:
-    #             if extra.title() in current_system.planets:
-    #                 console.clear()
-    #                 # TODO this will not work if the planet name has spaces
-    #                 console.print("[bold red] placeholder for planet event logic")
-    #                 ##print("")
-    #                 planet_name = extra.capitalize()
-    #                 resolve_planet_event(current_system, player_ship, planet_name)
-    #             else:
-    #                 print(f"{extra} is not a nearby planet!")
-    #         else:
-    #             # assume system level
-    #             success = resolve_system_event(current_system, player_ship)
-    #
-    #             if success:
-    #                 print("Encounter [green]SUCCESSFUL![/green]")
-    #                 current_system.planets_unlocked = True
-    #             else:
-    #                 print("Encounter [red]NOT SUCCESSFUL![/red]")
-    #             save_star_system(current_system)
-    #     elif verb == 'status':
-    #         table = build_status_table(player_ship)
-    #         cargotable = build_cargo_table(player_ship)
-    #         console.clear()
-    #         console.print(table)
-    #         console.print(cargotable)
-    #         input("Press Enter to Continue:")
-    #     elif verb == 'systems':
-    #         table = build_universe_table()
-    #         console.clear()
-    #         console.print(table)
-    #     else:
-    #         try:
-    #             next_system = int(verb) #temp holder for now, just assume if int user wants to jump
-    #         except:
-    #             pass
-    #         if type(next_system) is not int or next_system > len(current_system.linked_systems)+1 or next_system < 1:
-    #             print("Invalid Jump Coordinates!!!!!")
-    #         if next_system == count:
-    #             next_system = "unexplored"
-    #         else:
-    #             next_system = current_system.linked_systems[count - 2]
-    #
-    #         next_system = jump_to_starsystem(current_system, next_system)
-    #         current_system = next_system
+        # elif verb == 's':
+        #         playing = False
+        #         link = universe_save()
+        #         print(f"Quitting. All files saved. Graph produced here: {link}")
+        elif verb == 'e':
+            # event logic
+            if noun in PLANET_NOUNS and current_system.planets_unlocked is True:
+                if extra.title() in current_system.planets:
+                    console.clear()
+                    # TODO this will not work if the planet name has spaces
+                    console.print("[bold red] placeholder for planet event logic")
+                    ##print("")
+                    planet_name = extra.capitalize()
+                    resolve_planet_event(current_system, player_ship, planet_name)
+                else:
+                    print(f"{extra} is not a nearby planet!")
+            else:
+                # assume system level
+                success = resolve_system_event(current_system, player_ship)
+
+                if success:
+                    print("Encounter [green]SUCCESSFUL![/green]")
+                    current_system.planets_unlocked = True
+                else:
+                    print("Encounter [red]NOT SUCCESSFUL![/red]")
+                save_star_system(current_system)
+        # elif verb == 'status':
+        #     table = build_status_table(player_ship)
+        #     cargotable = build_cargo_table(player_ship)
+        #     console.clear()
+        #     console.print(table)
+        #     console.print(cargotable)
+        #     input("Press Enter to Continue:")
+        # elif verb == 'systems':
+        #     table = build_universe_table()
+        #     console.clear()
+        #     console.print(table)
+        else:
+            try:
+                choice = int(verb) #temp holder for now, just assume if int user wants to jump
+            except:
+                pass
+            if type(choice) is not int or choice > len(possible_linked_systems)+1 or choice < 1:
+                print("Invalid Jump Coordinates!!!!!")
+            # if next_system == count:
+            #     next_system = "unexplored"
+            else:
+                next_system = possible_linked_systems[choice]
+                # if next_system in
+                # next_system = current_system.linked_systems[possible_linked_systems[choice]]
+
+            next_system = jump_to_starsystem(current_system, next_system,game_path)
+            current_system = next_system
 
     return 0
 

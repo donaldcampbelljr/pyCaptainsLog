@@ -139,7 +139,7 @@ def build_universes_locally():
 
     starting_system = generate_systems(web, game_path, start_system_name)
 
-    return starting_system
+    return starting_system, game_path
 
 
 def create_web(names):

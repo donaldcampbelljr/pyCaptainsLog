@@ -179,6 +179,7 @@ def create_random_starsystem(source_system):
 def jump_to_starsystem(
     current_system: StarSystem,
     next_system_name: str,
+    game_path: str,
 ):
 
     ## Check if ship location is already at system
@@ -187,52 +188,68 @@ def jump_to_starsystem(
 
     # print(f"Current System: {current_system}\n")
 
+    # CONVERT THE NAME FIRST!
+    lower_next_system_name = next_system_name.replace(" ", "")
+    lower_next_system_name = lower_next_system_name.lower()
+
     console = Console()
     if next_system_name == "unexplored":
-        # Now we should create a new star system:
-        next_system = create_random_starsystem(source_system=current_system.name)
-        # print(f"Next System: {next_system.name}\n")
 
-        # must add the new system to the current system links
-        current_system.linked_systems.append(next_system.name)
-        save_star_system(current_system)
+        print("NOT IMPLEMENTED FOR UNEXPLORED")
+        # Now we should create a new star system:
+        # next_system = create_random_starsystem(source_system=current_system.name)
+        # # print(f"Next System: {next_system.name}\n")
+        #
+        # # must add the new system to the current system links
+        # current_system.linked_systems.append(next_system.name)
+        # save_star_system(current_system)
     else:
         if current_system.name == next_system_name:
             print("You are already in this system.")
             next_system = current_system
             console.clear()
-            console.print("[chartreuse3]Successful Jump")
+            console.print("[chartreuse3]Staying Put")
         else:
-            path_starsystems = os.path.abspath(STAR_DIRECTORY)
+            path_starsystems = os.path.abspath(game_path)
             filenames = []
             for dirpath, dirnames, filenames in walk(path_starsystems):
                 print(filenames)
 
             # Convert user facing name to lower case without spaces to find file name.
-            next_system_name = next_system_name.replace(" ", "")
-            next_system_name = next_system_name.lower()
+            # next_system_name = next_system_name.replace(" ", "")
+            # next_system_name = next_system_name.lower()
 
-            filename = next_system_name + ".yaml"
+            filename = lower_next_system_name + ".yaml"
 
-            if filename in filenames:
-                next_system = load_starsystem_yaml(filename)
-                next_system = create_starsystem_from_dict(next_system)
-                console.clear()
-                print("[chartreuse3]Successful Jump[/chartreuse3]")
-            else:
-                print("SYSTEM NOT FOUND")
-                next_system = current_system
-                print("JUMP NOT COMPLETED")
+            next_system = None
+            for f in filenames:
+                if filename in f:
+                    file_path = os.path.join(path_starsystems, f)
+                   # path_starsystems = os.path.abspath(starsystemfilepath)
+                    # file_name = starsystemfilename
+                    #
+                    # file_path = os.path.join(path_starsystems, file_name)
+                    next_system = load_starsystem_yaml(file_path)
+                    next_system = create_starsystem_from_dict(next_system)
+                    console.clear()
+                    print("[chartreuse3]Successful Jump[/chartreuse3]")
+
+
+    if next_system is None:
+        print("SYSTEM NOT FOUND")
+        next_system = current_system
+        print("JUMP NOT COMPLETED")
 
     return next_system
 
 
-def load_starsystem_yaml(starsystemfilename) -> StarSystem:
+def load_starsystem_yaml(starsystemfilepath) -> StarSystem:
 
-    path_starsystems = os.path.abspath(STAR_DIRECTORY)
-    file_name = starsystemfilename
-
-    file_path = os.path.join(path_starsystems, file_name)
+    #path_starsystems = os.path.abspath(starsystemfilepath)
+    # file_name = starsystemfilename
+    #
+    # file_path = os.path.join(path_starsystems, file_name)
+    file_path = starsystemfilepath
     with open(file_path, mode="rt", encoding="utf-8") as file:
         starsystem_loaded = yaml.safe_load(file)
 
