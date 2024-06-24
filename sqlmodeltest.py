@@ -1,6 +1,6 @@
 DATABASE="database/game.db"
 
-from sqlmodel import Field, SQLModel, create_engine, Session, Column, null, JSON
+from sqlmodel import Field, SQLModel, create_engine, Session, Column, null, JSON, select
 from typing import Optional
 
 
@@ -39,8 +39,20 @@ def main():
 
     add_star_system(engine)
 
+    retrieve_star_system(name = "Urth System", engine = engine)
+
+
 
     return 0
+
+def retrieve_star_system(name, engine):
+
+     with Session(engine) as session:
+        statement = select(StarSystem).where(StarSystem.name == name)
+        results = session.exec(statement).all()
+        for system in results:
+            print(system)   
+
 
 def add_star_system(engine):
 
