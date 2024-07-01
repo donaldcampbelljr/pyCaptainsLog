@@ -1,4 +1,6 @@
 
+# June 2024
+Begin adding sqlite db for storage instead of yaml file.
 
 # 14May2024
 Rethink engagements.
