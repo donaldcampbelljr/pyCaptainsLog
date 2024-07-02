@@ -51,18 +51,27 @@ def main():
 
     print(f"Here is retrieved the star system {star_system.name}")
 
+    star_system_2 = retrieve_single_entity(StarSystem, "Urth System", engine=engine )
+    print("\n\n-------------------------------------------------")
+    print(f"Here is retrieved the star system {star_system_2.name}")
+
 
     return 0
 
 def retrieve_star_system(name, engine):
-
-     with Session(engine) as session:
+    print("DEBUG: retrieve_star system")
+    with Session(engine) as session:
         statement = select(StarSystem).where(StarSystem.name == name)
         results = session.exec(statement).first()
-        # type(results.event_list)
-        # for system in results:
-        #     print(system)
-        return results   
+    return results   
+     
+def retrieve_single_entity(table_name,entity_name, engine):
+    print("DEBUG: SINGLE ENTITY")
+    with Session(engine) as session:
+        statement = select(table_name).where(table_name.name == entity_name)
+        results = session.exec(statement).first()
+    
+    return results   
 
 
 def add_star_system(engine):
