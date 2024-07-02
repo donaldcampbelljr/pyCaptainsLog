@@ -6,27 +6,31 @@ from random_generators import get_intro_text, generate_system_name
 from resources.planets import planet_descriptions
 from resources.systems import star_system_descriptions
 from resources.events import events_descriptions
-from starsystem import load_random_values, create_events, StarSystem, save_star_system
+from starsystem import load_random_values, create_events, save_star_system
 from planet import Planet
 from event import Event
 
+from orm import *
 
-def generate_systems(web, game_path, start):
+def generate_systems(web, start, engine):
 
     # For each system name in the web, generate a system
 
-    # Then save each system to disk
+    # Then save each system the database
 
     # Finally save the "map"/web to disk as well.
-    print(f" Here is the input parameters: {web} \n {game_path}")
+    print(f" Here is the input parameters: {web} \n {engine}")
 
     starting_system = None
 
     for name in list(web.keys()):
+        
         starsystem = create_random_starsystem(name, linked_systems=web[name])
+        
         if name == start:
             starting_system = starsystem
-        save_star_system(starsystem, game_path)
+        
+        add_star_syste_db(engine, starsystem)
 
     return starting_system
 
@@ -126,7 +130,17 @@ def build_universes_locally():
 
     """
 
-    game_path = make_directory()
+    #game_path = make_directory()
+
+
+    # sqlite_url = f"sqlite:///{DATABASE}"
+    # try:
+    #     engine = create_engine(sqlite_url, echo=True)
+    #     model = SQLModel.metadata.create_all(engine)
+    # except Exception:
+    #     print("Cannot create engine. Is the sqllite databse url correct?")
+
+    model, engine = create_orm()
 
     # generate list of names
 
@@ -137,7 +151,8 @@ def build_universes_locally():
     # For now, make simple closed graph with a start, an end, and 2 systems connected in between
     web, start_system_name, end_system_name = create_web(names)
 
-    starting_system = generate_systems(web, game_path, start_system_name)
+    starting_system = generate_systems(web, start_system_name, engine)
+
 
     return starting_system, game_path
 

@@ -15,36 +15,36 @@ from rich import print
 from rich.console import Console
 
 
-class StarSystem:
-    """
-    The main class that intializes star systems and is populated with attributes (planets, etc).
-    """
+# class StarSystem:
+#     """
+#     The main class that intializes star systems and is populated with attributes (planets, etc).
+#     """
 
-    def __init__(
-        self, name, planets, alien, linked_systems, intro_text, events, planets_unlocked
-    ) -> None:
+#     def __init__(
+#         self, name, planets, alien, linked_systems, intro_text, events, planets_unlocked
+#     ) -> None:
 
-        # Load Model, feed it inputs and then generate items.
+#         # Load Model, feed it inputs and then generate items.
 
-        self.name = name
-        self.planets = planets
-        self.alien = alien
-        self.linked_systems = linked_systems
-        self.intro_text = intro_text
-        name = name.replace(" ", "")
-        name = name.lower()
-        # Make the string lowercase using th
-        self.file_name = name + ".yaml"
+#         self.name = name
+#         self.planets = planets
+#         self.alien = alien
+#         self.linked_systems = linked_systems
+#         self.intro_text = intro_text
+#         name = name.replace(" ", "")
+#         name = name.lower()
+#         # Make the string lowercase using th
+#         self.file_name = name + ".yaml"
 
-        self.events = events
+#         self.events = events
 
-        if planets_unlocked is None:
-            planets_unlocked = False
+#         if planets_unlocked is None:
+#             planets_unlocked = False
 
-        self.planets_unlocked = planets_unlocked
+#         self.planets_unlocked = planets_unlocked
 
-    def __str__(self):
-        return f"Starsystem {self.name}"
+#     def __str__(self):
+#         return f"Starsystem {self.name}"
 
 
 def save_star_system(starsystem, path):

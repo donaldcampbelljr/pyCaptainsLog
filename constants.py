@@ -7,6 +7,9 @@ except KeyError:
     logging.Logger.warn("NO GOOGLE API KEY!")
     GOOGLE_API_KEY = None
 
+
+DATABASE="database/game.db"
+
 STAR_DIRECTORY = "starsystems"
 
 PLANET_NOUNS = ["planet", "p", "pl"]
